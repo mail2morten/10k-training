@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10k Training Plan</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <!-- Theme Initialization -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-200 font-sans selection:bg-emerald-500/30 transition-colors duration-300">
+
+    <!-- Navigation / Header -->
+    <nav class="border-b border-slate-200 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="trophy" class="w-6 h-6 text-emerald-500"></i>
+                <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Run<span class="text-emerald-500">Forge</span></span>
+            </div>
+            <div class="flex items-center space-x-4 text-sm font-medium" id="auth-status">
+                <span class="text-emerald-600 dark:text-emerald-400 text-xs bg-emerald-100 dark:bg-emerald-400/10 px-2 py-1 rounded-full flex items-center" id="status-online">
+                    <i data-lucide="save" class="w-3 h-3 mr-1"></i>
+                    Local Save Active
+                </span>
+                <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Toggle Theme">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Hero Section -->
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-6">
+            <div class="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Race Day: May 31st</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">
+                7-Week <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 dark:from-emerald-400 to-cyan-500 dark:to-cyan-400">10k Mastery</span>
+            </h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                The definitive schedule to crush your 10k goal. 
+                <strong class="text-slate-900 dark:text-slate-200 font-semibold block mt-2">Key Routine: Tuesday Rest, Wednesday Soccer HIIT, Sunday Long Run.</strong>
+            </p>
+
+            <!-- Progress Bar -->
+            <div class="mt-8 max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-300">
+                <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-800">
+                    <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-1000 ease-out" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between items-end">
+                    <div class="text-left">
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Plan Completion</p>
+                        <p class="text-3xl font-bold text-slate-900 dark:text-white"><span id="progress-percentage">0</span>%</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Tasks Done</p>
+                        <p class="text-xl font-bold text-emerald-500 dark:text-emerald-400"><span id="progress-tasks">0</span> <span class="text-slate-400 dark:text-slate-500 text-base">/ 56</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Grid (Populated via JS) -->
+        <div id="schedule-container" class="space-y-8"></div>
+
+        <!-- Injury Prevention & Tips Section -->
+        <div class="mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white flex items-center justify-center space-x-3">
+                    <i data-lucide="shield-alert" class="w-8 h-8 text-emerald-500 dark:text-emerald-400"></i>
+                    <span>Injury Prevention & Pro Tips</span>
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tip 1 -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-blue-400 dark:hover:border-blue-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="activity" class="w-6 h-6 text-blue-500 dark:text-blue-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Monday "Shakeouts"</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        After Sunday's long run, legs feel heavy. Keep this 2k/3k incredibly slow. Its only job is to increase blood flow and flush lactic acid before Tuesday's full rest.
+                    </p>
+                </div>
+
+                <!-- Tip 2 -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-purple-400 dark:hover:border-purple-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 bg-purple-50 dark:bg-purple-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-purple-500 dark:text-purple-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Friday is "Quality"</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Because Saturday is a rest day, afford to push yourself hard during Friday's intervals & tempo runs. Don't worry about being too tired for Sunday's Long Run.
+                    </p>
+                </div>
+
+                <!-- Tip 3 -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-cyan-400 dark:hover:border-cyan-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 bg-cyan-50 dark:bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="droplet" class="w-6 h-6 text-cyan-500 dark:text-cyan-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Hydration & Fuel</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Hardest efforts fall on Wed, Fri, and Sun. Ensure you eat enough complex carbs and drink plenty of water the <em>day before</em> each of these critical sessions.
+                    </p>
+                </div>
+
+                <!-- Tip 4 -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-emerald-400 dark:hover:border-emerald-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="beer" class="w-6 h-6 text-emerald-500 dark:text-emerald-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Alcohol-Free Recovery</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Cutting alcohol significantly improves sleep architecture, hydration levels, and muscle protein synthesis. Use the toggles to track your successful weeks!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800/60 mt-20 py-8 text-center text-slate-500 text-sm transition-colors duration-300">
+        <div class="flex items-center justify-center space-x-2 mb-2">
+            <i data-lucide="footprints" class="w-4 h-4"></i>
+            <span>Keep pushing forward.</span>
+        </div>
+        <p>Your progress is saved securely to this device.</p>
+    </footer>
+
+    <!-- Main Logic -->
+    <script>
+        // Initialize Lucide icons for static elements
+        lucide.createIcons();
+
+        // --- Data ---
+        const scheduleData = [
+            {
+                week: 1, date: "Apr 13",
+                days: [
+                    { id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" },
+                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
+                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
+                    { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" },
+                    { id: "fri", name: "Friday", type: "Speed", task: "3k (with 4x 1-min fast)" },
+                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
+                    { id: "sun", name: "Sunday", type: "Long", task: "4k Long Run" },
+                ]
+            },
+            {
+                week: 2, date: "Apr 20",
+                days: [
+                    { id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" },
+                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
+                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
+                    { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" },
+                    { id: "fri", name: "Friday", type: "Speed", task: "4k (with 5x 1-min fast)" },
+                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
+                    { id: "sun", name: "Sunday", type: "Long", task: "5k Long Run" },
+                ]
+            },
+            {
+                week: 3, date: "Apr 27",
+                days: [
+                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
+                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
+                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
+                    { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" },
+                    { id: "fri", name: "Friday", type: "Tempo", task: "4k Tempo" },
+                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
+                    { id: "sun", name: "Sunday", type: "Long", task: "6k Long Run" },
+                ]
+            },
+            {
+                week: 4, date: "May 4",
+                days: [
+                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
+                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
+                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
+                    { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" },
+                    { id: "fri", name: "Friday", type: "Intervals", task: "5k Intervals" },
+                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
+                    { id: "sun", name: "Sunday", type: "Long", task: "7k Long Run" },
+                ]
+            },
+            {
+                week: 5, date: "May 11",
+                days: [
+                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
+                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
+                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
+                    { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" },
+                    { id: "fri", name: "Friday", type: "Tempo", task: "5k Tempo" },
+                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
+                    { id: "sun", name: "Sunday", type: "Long", task: "8k Long Run" },
+                ]
+            },
+            {
+                week: 6, date: "May 18",
+                days: [
+                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
+                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
+                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
+                    { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" },
+                    { id: "fri", name: "Friday", type: "Intervals", task: "4k Intervals" },
+                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
+                    { id: "sun", name: "Sunday", type: "Long", task: "9k Long Run" },
+                ]
+            },
+            {
+                week: 7, date: "May 25",
+                days: [
+                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
+                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
+                    { id: "wed", name: "Wednesday", type: "Recovery", task: "Skip or go very light!" },
+                    { id: "thu", name: "Thursday", type: "Recovery", task: "2k Very Easy" },
+                    { id: "fri", name: "Friday", type: "Rest", task: "Rest" },
+                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest / Walk" },
+                    { id: "sun", name: "Sunday", type: "Race", task: "10k RACE DAY!" },
+                ]
+            }
+        ];
+
+        // --- State ---
+        const LOCAL_STORAGE_KEY = '10kTrainingProgress';
+        let progressData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || {};
+
+        // --- Helper Functions ---
+        const getTypeColor = (type) => {
+            switch (type) {
+                case 'Rest': return 'text-slate-500 bg-slate-100 dark:bg-slate-800/50 border-transparent dark:border-slate-700';
+                case 'Recovery': return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20';
+                case 'Hard': return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 border-orange-200 dark:border-orange-500/20';
+                case 'Speed': return 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/10 border-purple-200 dark:border-purple-500/20';
+                case 'Tempo': return 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/20';
+                case 'Intervals': return 'text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-500/10 border-pink-200 dark:border-pink-500/20';
+                case 'Long': return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20';
+                case 'Race': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-500/20 border-yellow-300 dark:border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.2)] dark:shadow-[0_0_15px_rgba(234,179,8,0.3)]';
+                default: return 'text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800';
+            }
+        };
+
+        // Reusable SVG Icons for dynamic content
+        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+        const circleIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-300 dark:text-slate-600"><circle cx="12" cy="12" r="10"/></svg>`;
+
+        // --- Render UI ---
+        function updateUI() {
+            const container = document.getElementById('schedule-container');
+            let htmlString = '';
+
+            scheduleData.forEach(weekData => {
+                const alcKey = `w${weekData.week}_alcohol`;
+                const isAlcChecked = progressData[alcKey] || false;
+
+                let daysHtml = '';
+                weekData.days.forEach(day => {
+                    const taskKey = `w${weekData.week}_${day.id}`;
+                    const isTaskChecked = progressData[taskKey] || false;
+                    const isRest = day.type === 'Rest';
+
+                    const btnClass = isTaskChecked
+                        ? 'bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/30'
+                        : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800';
+                        
+                    const iconTransform = isTaskChecked ? 'scale-110' : 'scale-100 group-hover:scale-110';
+                    const iconSvg = isTaskChecked ? checkIcon : circleIcon;
+                    const textClass = isTaskChecked ? 'text-slate-400 line-through' : (isRest ? 'text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200');
+
+                    daysHtml += `
+                        <button data-task="${taskKey}" class="text-left group relative flex flex-col p-4 rounded-xl border transition-all duration-200 ${btnClass}">
+                            <div class="flex justify-between items-start w-full mb-3">
+                                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">${day.name}</span>
+                                <div class="transition-transform duration-200 ${iconTransform}">
+                                    ${iconSvg}
+                                </div>
+                            </div>
+                            <div class="mt-auto inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-2 w-max border ${getTypeColor(day.type)}">
+                                ${day.type}
+                            </div>
+                            <span class="text-sm font-semibold leading-tight ${textClass}">
+                                ${day.task}
+                            </span>
+                        </button>
+                    `;
+                });
+
+                const alcBtnClass = isAlcChecked 
+                    ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400' 
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-900';
+
+                htmlString += `
+                    <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-slate-300 dark:hover:border-slate-700 transition-colors shadow-sm dark:shadow-none">
+                        <div class="bg-slate-50 dark:bg-slate-800/40 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-slate-800/80 gap-4 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold w-10 h-10 rounded-xl flex items-center justify-center">
+                                    W${weekData.week}
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Week ${weekData.week}</h2>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">Starting ${weekData.date}</p>
+                                </div>
+                            </div>
+                            <button data-task="${alcKey}" class="flex items-center space-x-3 px-4 py-2 rounded-xl border transition-all ${alcBtnClass}">
+                                <div class="flex flex-col text-left">
+                                    <span class="text-xs font-semibold uppercase tracking-wider">No Alcohol 🚫🍺</span>
+                                </div>
+                                ${isAlcChecked ? checkIcon : circleIcon}
+                            </button>
+                        </div>
+                        <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
+                            ${daysHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = htmlString;
+
+            // Update Stats
+            const totalTasks = scheduleData.length * 8;
+            const completedTasks = Object.values(progressData).filter(Boolean).length;
+            const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            document.getElementById('progress-tasks').textContent = completedTasks;
+            document.getElementById('progress-percentage').textContent = completionPercentage;
+            document.getElementById('progress-bar-fill').style.width = `${completionPercentage}%`;
+        }
+
+        // --- Interaction ---
+        document.getElementById('schedule-container').addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-task]');
+            if (!btn) return;
+            
+            const key = btn.getAttribute('data-task');
+            
+            // Toggle Update & Save to LocalStorage
+            progressData[key] = !progressData[key];
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
+            
+            updateUI();
+        });
+
+        // --- Initialization Sequence ---
+        function initApp() {
+            updateUI(); // Render state from localStorage initially
+
+            // Setup Theme Toggle
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    document.documentElement.classList.toggle('dark');
+                    const isDark = document.documentElement.classList.contains('dark');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                });
+            }
+        }
+
+        // Start
+        initApp();
+    </script>
+</body>
+</html>
