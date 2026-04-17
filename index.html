@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>10k Training Plan</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,17 +26,17 @@
 
     <!-- Navigation / Header -->
     <nav class="border-b border-slate-200 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <i data-lucide="trophy" class="w-6 h-6 text-emerald-500"></i>
-                <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Run<span class="text-emerald-500">Forge</span></span>
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-1.5 sm:space-x-2">
+                <i data-lucide="trophy" class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500"></i>
+                <span class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">Run<span class="text-emerald-500">Forge</span></span>
             </div>
-            <div class="flex items-center space-x-4 text-sm font-medium" id="auth-status">
-                <span class="text-emerald-600 dark:text-emerald-400 text-xs bg-emerald-100 dark:bg-emerald-400/10 px-2 py-1 rounded-full flex items-center" id="status-online">
-                    <i data-lucide="save" class="w-3 h-3 mr-1"></i>
-                    Local Save Active
+            <div class="flex items-center space-x-2 sm:space-x-4 text-sm font-medium" id="auth-status">
+                <span class="text-emerald-600 dark:text-emerald-400 text-[10px] sm:text-xs bg-emerald-100 dark:bg-emerald-400/10 px-2 py-1 sm:py-1.5 rounded-full flex items-center" id="status-online">
+                    <i data-lucide="save" class="w-3 h-3 sm:mr-1"></i>
+                    <span class="hidden sm:inline">Local Save Active</span>
                 </span>
-                <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Toggle Theme">
+                <button id="theme-toggle" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Toggle Theme">
                     <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
                     <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
                 </button>
@@ -44,93 +44,93 @@
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12">
         
         <!-- Hero Section -->
-        <div class="text-center max-w-3xl mx-auto mb-16 space-y-6">
-            <div class="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-                <i data-lucide="calendar" class="w-4 h-4"></i>
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16 space-y-4 sm:space-y-6">
+            <div class="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                 <span>Race Day: May 31st</span>
             </div>
-            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2 sm:mb-4">
                 7-Week <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 dark:from-emerald-400 to-cyan-500 dark:to-cyan-400">10k Mastery</span>
             </h1>
-            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed px-2">
                 The definitive schedule to crush your 10k goal. 
-                <strong class="text-slate-900 dark:text-slate-200 font-semibold block mt-2">Key Routine: Tuesday Rest, Wednesday Soccer HIIT, Sunday Long Run.</strong>
+                <strong class="text-slate-900 dark:text-slate-200 font-semibold block mt-1 sm:mt-2">Key Routine: Tue Rest, Wed HIIT, Sun Long Run.</strong>
             </p>
 
             <!-- Progress Bar -->
-            <div class="mt-8 max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-300">
+            <div class="mt-6 sm:mt-8 max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-300">
                 <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-800">
                     <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-1000 ease-out" style="width: 0%"></div>
                 </div>
                 <div class="flex justify-between items-end">
                     <div class="text-left">
-                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Plan Completion</p>
-                        <p class="text-3xl font-bold text-slate-900 dark:text-white"><span id="progress-percentage">0</span>%</p>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Plan Completion</p>
+                        <p class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"><span id="progress-percentage">0</span>%</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Tasks Done</p>
-                        <p class="text-xl font-bold text-emerald-500 dark:text-emerald-400"><span id="progress-tasks">0</span> <span class="text-slate-400 dark:text-slate-500 text-base">/ 56</span></p>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Tasks Done</p>
+                        <p class="text-lg sm:text-xl font-bold text-emerald-500 dark:text-emerald-400"><span id="progress-tasks">0</span> <span class="text-slate-400 dark:text-slate-500 text-sm sm:text-base">/ 56</span></p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Schedule Grid (Populated via JS) -->
-        <div id="schedule-container" class="space-y-8"></div>
+        <div id="schedule-container" class="space-y-6 sm:space-y-8"></div>
 
         <!-- Injury Prevention & Tips Section -->
-        <div class="mt-20">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white flex items-center justify-center space-x-3">
-                    <i data-lucide="shield-alert" class="w-8 h-8 text-emerald-500 dark:text-emerald-400"></i>
+        <div class="mt-16 sm:mt-20">
+            <div class="text-center mb-8 sm:mb-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white flex items-center justify-center space-x-2 sm:space-x-3">
+                    <i data-lucide="shield-alert" class="w-6 h-6 sm:w-8 sm:h-8 text-emerald-500 dark:text-emerald-400"></i>
                     <span>Injury Prevention & Pro Tips</span>
                 </h2>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <!-- Tip 1 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-blue-400 dark:hover:border-blue-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-12 h-12 bg-blue-50 dark:bg-blue-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="activity" class="w-6 h-6 text-blue-500 dark:text-blue-400"></i>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-blue-400 dark:hover:border-blue-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 dark:bg-blue-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="activity" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 dark:text-blue-400"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Monday "Shakeouts"</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Monday "Shakeouts"</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                         After Sunday's long run, legs feel heavy. Keep this 2k/3k incredibly slow. Its only job is to increase blood flow and flush lactic acid before Tuesday's full rest.
                     </p>
                 </div>
 
                 <!-- Tip 2 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-purple-400 dark:hover:border-purple-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-12 h-12 bg-purple-50 dark:bg-purple-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="trending-up" class="w-6 h-6 text-purple-500 dark:text-purple-400"></i>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-purple-400 dark:hover:border-purple-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-50 dark:bg-purple-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="trending-up" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-500 dark:text-purple-400"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Friday is "Quality"</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Friday is "Quality"</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                         Because Saturday is a rest day, afford to push yourself hard during Friday's intervals & tempo runs. Don't worry about being too tired for Sunday's Long Run.
                     </p>
                 </div>
 
                 <!-- Tip 3 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-cyan-400 dark:hover:border-cyan-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-12 h-12 bg-cyan-50 dark:bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="droplet" class="w-6 h-6 text-cyan-500 dark:text-cyan-400"></i>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-cyan-400 dark:hover:border-cyan-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-cyan-50 dark:bg-cyan-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="droplet" class="w-5 h-5 sm:w-6 sm:h-6 text-cyan-500 dark:text-cyan-400"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Hydration & Fuel</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Hydration & Fuel</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                         Hardest efforts fall on Wed, Fri, and Sun. Ensure you eat enough complex carbs and drink plenty of water the <em>day before</em> each of these critical sessions.
                     </p>
                 </div>
 
                 <!-- Tip 4 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl hover:border-emerald-400 dark:hover:border-emerald-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="beer" class="w-6 h-6 text-emerald-500 dark:text-emerald-400"></i>
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-emerald-400 dark:hover:border-emerald-500/30 transition-colors group shadow-sm dark:shadow-none">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                        <i data-lucide="beer" class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500 dark:text-emerald-400"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Alcohol-Free Recovery</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Alcohol-Free Recovery</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                         Cutting alcohol significantly improves sleep architecture, hydration levels, and muscle protein synthesis. Use the toggles to track your successful weeks!
                     </p>
                 </div>
@@ -138,7 +138,7 @@
         </div>
     </main>
 
-    <footer class="border-t border-slate-200 dark:border-slate-800/60 mt-20 py-8 text-center text-slate-500 text-sm transition-colors duration-300">
+    <footer class="border-t border-slate-200 dark:border-slate-800/60 mt-12 sm:mt-20 py-8 text-center text-slate-500 text-xs sm:text-sm transition-colors duration-300">
         <div class="flex items-center justify-center space-x-2 mb-2">
             <i data-lucide="footprints" class="w-4 h-4"></i>
             <span>Keep pushing forward.</span>
@@ -259,8 +259,8 @@
         };
 
         // Reusable SVG Icons for dynamic content
-        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
-        const circleIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-300 dark:text-slate-600"><circle cx="12" cy="12" r="10"/></svg>`;
+        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+        const circleIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-300 dark:text-slate-600"><circle cx="12" cy="12" r="10"/></svg>`;
 
         // --- Render UI ---
         function updateUI() {
@@ -284,19 +284,23 @@
                     const iconTransform = isTaskChecked ? 'scale-110' : 'scale-100 group-hover:scale-110';
                     const iconSvg = isTaskChecked ? checkIcon : circleIcon;
                     const textClass = isTaskChecked ? 'text-slate-400 line-through' : (isRest ? 'text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200');
+                    
+                    // Condense day name on mobile (e.g. Monday -> Mon)
+                    const dayNameShort = day.name.substring(0, 3);
+                    const dayNameRest = day.name.substring(3);
 
                     daysHtml += `
-                        <button data-task="${taskKey}" class="text-left group relative flex flex-col p-4 rounded-xl border transition-all duration-200 ${btnClass}">
-                            <div class="flex justify-between items-start w-full mb-3">
-                                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">${day.name}</span>
+                        <button data-task="${taskKey}" class="text-left group relative flex flex-col p-3 sm:p-4 rounded-xl border transition-all duration-200 ${btnClass}">
+                            <div class="flex justify-between items-start w-full mb-2 sm:mb-3">
+                                <span class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">${dayNameShort}<span class="hidden sm:inline">${dayNameRest}</span></span>
                                 <div class="transition-transform duration-200 ${iconTransform}">
                                     ${iconSvg}
                                 </div>
                             </div>
-                            <div class="mt-auto inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-2 w-max border ${getTypeColor(day.type)}">
+                            <div class="mt-auto inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-1.5 sm:mb-2 w-max border ${getTypeColor(day.type)}">
                                 ${day.type}
                             </div>
-                            <span class="text-sm font-semibold leading-tight ${textClass}">
+                            <span class="text-xs sm:text-sm font-semibold leading-tight ${textClass}">
                                 ${day.task}
                             </span>
                         </button>
@@ -309,24 +313,24 @@
 
                 htmlString += `
                     <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-slate-300 dark:hover:border-slate-700 transition-colors shadow-sm dark:shadow-none">
-                        <div class="bg-slate-50 dark:bg-slate-800/40 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-slate-800/80 gap-4 transition-colors">
+                        <div class="bg-slate-50 dark:bg-slate-800/40 px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-slate-800/80 gap-3 sm:gap-4 transition-colors">
                             <div class="flex items-center space-x-3">
                                 <div class="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold w-10 h-10 rounded-xl flex items-center justify-center">
                                     W${weekData.week}
                                 </div>
                                 <div>
-                                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Week ${weekData.week}</h2>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400">Starting ${weekData.date}</p>
+                                    <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Week ${weekData.week}</h2>
+                                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Starting ${weekData.date}</p>
                                 </div>
                             </div>
-                            <button data-task="${alcKey}" class="flex items-center space-x-3 px-4 py-2 rounded-xl border transition-all ${alcBtnClass}">
+                            <button data-task="${alcKey}" class="flex items-center justify-between sm:justify-start space-x-3 px-4 py-2 rounded-xl border transition-all w-full sm:w-auto ${alcBtnClass}">
                                 <div class="flex flex-col text-left">
-                                    <span class="text-xs font-semibold uppercase tracking-wider">No Alcohol 🚫🍺</span>
+                                    <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">No Alcohol 🚫🍺</span>
                                 </div>
                                 ${isAlcChecked ? checkIcon : circleIcon}
                             </button>
                         </div>
-                        <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
+                        <div class="p-3 sm:p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 sm:gap-3">
                             ${daysHtml}
                         </div>
                     </div>
