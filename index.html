@@ -42,91 +42,91 @@
         const provider = new GoogleAuthProvider();
 
         const scheduleData = [
-            {
-                week: 1, date: "April 13 - April 19",
-                days: [
-                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
-                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
-                    { id: 'wed', name: 'Wed', type: 'Hard', task: '4x800m Intervals' },
-                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
-                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '6km Threshold' },
-                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
-                    { id: 'sun', name: 'Sun', type: 'Long', task: '10km Endurance' }
-                ]
-            },
-            {
-                week: 2, date: "April 20 - April 26",
-                days: [
-                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
-                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
-                    { id: 'wed', name: 'Wed', type: 'Hard', task: '5x800m Intervals' },
-                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
-                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '7km Threshold' },
-                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
-                    { id: 'sun', name: 'Sun', type: 'Long', task: '12km Endurance' }
-                ]
-            },
-            {
-                week: 3, date: "April 27 - May 3",
-                days: [
-                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '6km Easy Run' },
-                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
-                    { id: 'wed', name: 'Wed', type: 'Speed', task: '8x400m Sprints' },
-                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
-                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '8km Threshold' },
-                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '4km Shakeout' },
-                    { id: 'sun', name: 'Sun', type: 'Long', task: '14km Endurance' }
-                ]
-            },
-            {
-                week: 4, date: "May 4 - May 10",
-                days: [
-                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
-                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
-                    { id: 'wed', name: 'Wed', type: 'Intervals', task: '3x1km Intervals' },
-                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
-                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '6km Threshold' },
-                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
-                    { id: 'sun', name: 'Sun', type: 'Long', task: '10km Endurance' }
-                ]
-            },
-            {
-                week: 5, date: "May 11 - May 17",
-                days: [
-                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '6km Easy Run' },
-                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
-                    { id: 'wed', name: 'Wed', type: 'Speed', task: '10x400m Sprints' },
-                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
-                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '8km Threshold' },
-                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '4km Shakeout' },
-                    { id: 'sun', name: 'Sun', type: 'Long', task: '15km Endurance' }
-                ]
-            },
-            {
-                week: 6, date: "May 18 - May 24",
-                days: [
-                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
-                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
-                    { id: 'wed', name: 'Wed', type: 'Intervals', task: '4x1km Intervals' },
-                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
-                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '5km Threshold' },
-                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
-                    { id: 'sun', name: 'Sun', type: 'Long', task: '12km Endurance' }
-                ]
-            },
-            {
-                week: 7, date: "May 25 - May 31",
-                days: [
-                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '4km Easy Run' },
-                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
-                    { id: 'wed', name: 'Wed', type: 'Speed', task: '4x400m Sprints' },
-                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
-                    { id: 'fri', name: 'Fri', type: 'Recovery', task: '3km Shakeout' },
-                    { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
-                    { id: 'sun', name: 'Sun', type: 'Race', task: '10k Race Day!' }
-                ]
-            }
-        ];
+    {
+        week: 1, date: "April 13 - April 19",
+        days: [
+            { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+            { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+            { id: 'wed', name: 'Wed', type: 'Speed', task: 'HIIT Soccer' },
+            { id: 'thu', name: 'Thu', type: 'Recovery', task: '4km Easy Run' }, // Updated
+            { id: 'fri', name: 'Fri', type: 'Tempo', task: '6km Threshold' },
+            { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+            { id: 'sun', name: 'Sun', type: 'Long', task: '8km Endurance' }
+        ]
+    },
+    {
+        week: 2, date: "April 20 - April 26",
+        days: [
+            { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+            { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+            { id: 'wed', name: 'Wed', type: 'Speed', task: 'HIIT Soccer' },
+            { id: 'thu', name: 'Thu', type: 'Recovery', task: '4km Easy Run' }, // Updated
+            { id: 'fri', name: 'Fri', type: 'Tempo', task: '7km Threshold' },
+            { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+            { id: 'sun', name: 'Sun', type: 'Long', task: '10km Endurance' }
+        ]
+    },
+    {
+        week: 3, date: "April 27 - May 3",
+        days: [
+            { id: 'mon', name: 'Mon', type: 'Recovery', task: '6km Easy Run' },
+            { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+            { id: 'wed', name: 'Wed', type: 'Speed', task: 'HIIT Soccer' },
+            { id: 'thu', name: 'Thu', type: 'Recovery', task: '5km Easy Run' }, // Updated
+            { id: 'fri', name: 'Fri', type: 'Tempo', task: '8km Threshold' },
+            { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+            { id: 'sun', name: 'Sun', type: 'Long', task: '12km Endurance' }
+        ]
+    },
+    {
+        week: 4, date: "May 4 - May 10",
+        days: [
+            { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+            { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+            { id: 'wed', name: 'Wed', type: 'Speed', task: 'HIIT Soccer' },
+            { id: 'thu', name: 'Thu', type: 'Recovery', task: '4km Easy Run' }, // Updated
+            { id: 'fri', name: 'Fri', type: 'Tempo', task: '6km Threshold' },
+            { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+            { id: 'sun', name: 'Sun', type: 'Long', task: '8km Endurance' }
+        ]
+    },
+    {
+        week: 5, date: "May 11 - May 17",
+        days: [
+            { id: 'mon', name: 'Mon', type: 'Recovery', task: '6km Easy Run' },
+            { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+            { id: 'wed', name: 'Wed', type: 'Speed', task: 'HIIT Soccer' },
+            { id: 'thu', name: 'Thu', type: 'Recovery', task: '5km Easy Run' }, // Updated
+            { id: 'fri', name: 'Fri', type: 'Tempo', task: '8km Threshold' },
+            { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+            { id: 'sun', name: 'Sun', type: 'Long', task: '13km Endurance' }
+        ]
+    },
+    {
+        week: 6, date: "May 18 - May 24",
+        days: [
+            { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+            { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+            { id: 'wed', name: 'Wed', type: 'Speed', task: 'HIIT Soccer' },
+            { id: 'thu', name: 'Thu', type: 'Recovery', task: '4km Easy Run' }, // Updated
+            { id: 'fri', name: 'Fri', type: 'Tempo', task: '5km Threshold' },
+            { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+            { id: 'sun', name: 'Sun', type: 'Long', task: '10km Endurance' }
+        ]
+    },
+    {
+        week: 7, date: "May 25 - May 31",
+        days: [
+            { id: 'mon', name: 'Mon', type: 'Recovery', task: '4km Easy Run' },
+            { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+            { id: 'wed', name: 'Wed', type: 'Speed', task: 'HIIT Soccer' },
+            { id: 'thu', name: 'Thu', type: 'Recovery', task: '3km Easy Run' }, // Updated (Taper)
+            { id: 'fri', name: 'Fri', type: 'Recovery', task: '3km Shakeout' },
+            { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+            { id: 'sun', name: 'Sun', type: 'Race', task: '10k Race Day!' }
+        ]
+    }
+];
 
         const allWeightKeys = [];
         scheduleData.forEach(w => {
