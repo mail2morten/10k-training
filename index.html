@@ -18,31 +18,115 @@
 
     <!-- Firebase SDK Integration -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyADK2YRcaR-uk5zrwri-qWR7DAWsaQ35KY",
-            authDomain: "runforge-cede3.firebaseapp.com",
-            projectId: "runforge-cede3",
-            storageBucket: "runforge-cede3.firebasestorage.app",
-            messagingSenderId: "424668696488",
-            appId: "1:424668696488:web:1d0f3d2ed844871159979d",
-            measurementId: "G-G2LH33W255",
-            databaseURL: "https://runforge-cede3-default-rtdb.europe-west1.firebasedatabase.app"
-        };
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const db = getFirestore(app);
         const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        
-        // Configuration for better popup behavior
-        provider.setCustomParameters({ prompt: 'select_account' });
+
+        // --- NEW: Added Schedule Data ---
+        const scheduleData = [
+            {
+                week: 1, date: "April 13 - April 19",
+                days: [
+                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+                    { id: 'wed', name: 'Wed', type: 'Hard', task: '4x800m Intervals' },
+                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
+                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '6km Threshold' },
+                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
+                    { id: 'sun', name: 'Sun', type: 'Long', task: '10km Endurance' }
+                ]
+            },
+            {
+                week: 2, date: "April 20 - April 26",
+                days: [
+                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+                    { id: 'wed', name: 'Wed', type: 'Hard', task: '5x800m Intervals' },
+                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
+                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '7km Threshold' },
+                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
+                    { id: 'sun', name: 'Sun', type: 'Long', task: '12km Endurance' }
+                ]
+            },
+            {
+                week: 3, date: "April 27 - May 3",
+                days: [
+                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '6km Easy Run' },
+                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+                    { id: 'wed', name: 'Wed', type: 'Speed', task: '8x400m Sprints' },
+                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
+                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '8km Threshold' },
+                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '4km Shakeout' },
+                    { id: 'sun', name: 'Sun', type: 'Long', task: '14km Endurance' }
+                ]
+            },
+            {
+                week: 4, date: "May 4 - May 10",
+                days: [
+                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+                    { id: 'wed', name: 'Wed', type: 'Intervals', task: '3x1km Intervals' },
+                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
+                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '6km Threshold' },
+                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
+                    { id: 'sun', name: 'Sun', type: 'Long', task: '10km Endurance' }
+                ]
+            },
+            {
+                week: 5, date: "May 11 - May 17",
+                days: [
+                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '6km Easy Run' },
+                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+                    { id: 'wed', name: 'Wed', type: 'Speed', task: '10x400m Sprints' },
+                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
+                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '8km Threshold' },
+                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '4km Shakeout' },
+                    { id: 'sun', name: 'Sun', type: 'Long', task: '15km Endurance' }
+                ]
+            },
+            {
+                week: 6, date: "May 18 - May 24",
+                days: [
+                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '5km Easy Run' },
+                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+                    { id: 'wed', name: 'Wed', type: 'Intervals', task: '4x1km Intervals' },
+                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
+                    { id: 'fri', name: 'Fri', type: 'Tempo', task: '5km Threshold' },
+                    { id: 'sat', name: 'Sat', type: 'Recovery', task: '3km Shakeout' },
+                    { id: 'sun', name: 'Sun', type: 'Long', task: '12km Endurance' }
+                ]
+            },
+            {
+                week: 7, date: "May 25 - May 31",
+                days: [
+                    { id: 'mon', name: 'Mon', type: 'Recovery', task: '4km Easy Run' },
+                    { id: 'tue', name: 'Tue', type: 'Rest', task: 'Full Rest' },
+                    { id: 'wed', name: 'Wed', type: 'Speed', task: '4x400m Sprints' },
+                    { id: 'thu', name: 'Thu', type: 'Rest', task: 'Full Rest' },
+                    { id: 'fri', name: 'Fri', type: 'Recovery', task: '3km Shakeout' },
+                    { id: 'sat', name: 'Sat', type: 'Rest', task: 'Full Rest' },
+                    { id: 'sun', name: 'Sun', type: 'Race', task: '10k Race Day!' }
+                ]
+            }
+        ];
+
+        // --- NEW: Generate weight keys for initialization based on schedule ---
+        const allWeightKeys = [];
+        scheduleData.forEach(w => {
+            w.days.forEach(d => {
+                allWeightKeys.push(`w${w.week}_${d.id}_weight`);
+            });
+        });
 
         let progressData = {};
-        let currentDataRef = null;
+        let currentDocRef = null;
         let paceChart = null;
         let weightChart = null;
         const DEFAULT_WEIGHT = 83.1;
@@ -53,17 +137,15 @@
             errorEl.classList.add('hidden');
             
             try {
-                // Ensure persistence is set so you stay logged in
-                await setPersistence(auth, browserLocalPersistence);
-                await signInWithPopup(auth, provider);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
             } catch (err) {
                 console.error("Auth Error:", err);
-                errorEl.textContent = `Error: ${err.code.replace('auth/', '')}`;
+                errorEl.textContent = `Error: ${err.message}`;
                 errorEl.classList.remove('hidden');
-                
-                if (err.code === 'auth/unauthorized-domain') {
-                    errorEl.innerHTML = `<strong>Domain Blocked:</strong> Go to Firebase Console > Auth > Settings > Authorized Domains and add: <br><code class="bg-slate-100 dark:bg-slate-800 p-1 rounded text-[10px] mt-2 block">${window.location.hostname}</code>`;
-                }
             }
         };
 
@@ -78,8 +160,8 @@
             if (user) {
                 authScreen.classList.add('hidden');
                 appContent.classList.remove('hidden');
-                document.getElementById('user-avatar').src = user.photoURL || '';
-                document.getElementById('user-name').textContent = user.displayName ? user.displayName.split(' ')[0] : 'User';
+                document.getElementById('user-avatar').src = user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`;
+                document.getElementById('user-name').textContent = user.displayName ? user.displayName.split(' ')[0] : 'Runner';
                 startSync(user.uid);
             } else {
                 authScreen.classList.remove('hidden');
@@ -88,16 +170,15 @@
         });
 
         function startSync(uid) {
-            currentDataRef = ref(db, `users/${uid}/training_stats`);
-            onValue(currentDataRef, (snapshot) => {
-                const data = snapshot.val();
-                if (!data) {
+            currentDocRef = doc(db, 'artifacts', appId, 'users', uid, 'training_stats', 'data');
+            onSnapshot(currentDocRef, (snapshot) => {
+                if (!snapshot.exists()) {
                     const initial = {};
                     allWeightKeys.forEach(k => initial[k] = DEFAULT_WEIGHT);
-                    set(currentDataRef, initial);
+                    setDoc(currentDocRef, initial);
                     return;
                 }
-                progressData = data;
+                progressData = snapshot.data();
                 renderSchedule();
                 updateCharts();
                 updateStats();
@@ -106,8 +187,8 @@
                 document.getElementById('schedule-container').innerHTML = `
                     <div class="p-8 bg-rose-50 dark:bg-rose-900/10 border-2 border-dashed border-rose-200 dark:border-rose-900/30 rounded-3xl text-center">
                         <i data-lucide="lock" class="w-10 h-10 text-rose-500 mx-auto mb-4"></i>
-                        <h3 class="font-bold text-rose-800 dark:text-rose-400">Database Locked</h3>
-                        <p class="text-xs text-rose-600/70 mt-2">Update your Database Rules to allow access to users/${uid}</p>
+                        <h3 class="font-bold text-rose-800 dark:text-rose-400">Database Error</h3>
+                        <p class="text-xs text-rose-600/70 mt-2">Could not sync data. Ensure you have the correct permissions.</p>
                     </div>
                 `;
                 lucide.createIcons();
@@ -116,27 +197,27 @@
 
         // --- App Actions ---
         window.handleInput = (el) => {
-            if (!currentDataRef) return;
-            update(currentDataRef, { [el.dataset.key]: el.value });
+            if (!currentDocRef) return;
+            updateDoc(currentDocRef, { [el.dataset.key]: el.value });
         };
 
         window.handleWeightInput = (el) => {
-            if (!currentDataRef) return;
+            if (!currentDocRef) return;
             const key = el.dataset.key;
             const val = el.value;
             const idx = allWeightKeys.indexOf(key);
             if (idx !== -1) {
                 const updates = {};
                 for (let i = idx; i < allWeightKeys.length; i++) updates[allWeightKeys[i]] = val;
-                update(currentDataRef, updates);
+                updateDoc(currentDocRef, updates);
             }
         };
 
         window.toggleTask = (key) => {
-            if (!currentDataRef) return;
+            if (!currentDocRef) return;
             const currentStatus = progressData[key] || 0;
             const nextStatus = (currentStatus + 1) % 3;
-            update(currentDataRef, { [key]: nextStatus });
+            updateDoc(currentDocRef, { [key]: nextStatus });
         };
 
         // --- UI Rendering ---
@@ -172,7 +253,7 @@
                                 <div class="bg-emerald-500 text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center text-xs">W${w.week}</div>
                                 <h2 class="text-sm font-bold">Week ${w.week} - ${w.date}</h2>
                             </div>
-                            <button onclick="toggleTask('${alcKey}')" class="px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all ${alc === 1 ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white dark:bg-slate-900 border-slate-200'}">Dry Discipline</button>
+                            <button onclick="toggleTask('${alcKey}')" class="px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all z-20 relative ${alc === 1 ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white dark:bg-slate-900 border-slate-200'}">Dry Discipline</button>
                         </div>
                         <div class="p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5">${days}</div>
                     </div>`;
@@ -209,11 +290,15 @@
             scheduleData.forEach(w => {
                 ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
                     const wKey = `w${w.week}_${d}_weight`;
-                    wL.push(`W${w.week} ${d[0].toUpperCase()}`);
+                    // --- NEW: Fix label formatting (e.g. "Mon" instead of "M") ---
+                    const formattedDay = d.charAt(0).toUpperCase() + d.slice(1);
+                    
+                    wL.push(`W${w.week} ${formattedDay}`);
                     wD.push(parseNum(progressData[wKey]) || DEFAULT_WEIGHT);
+                    
                     if (['mon', 'fri', 'sun'].includes(d)) {
                         const pKey = `w${w.week}_${d}_pace`;
-                        pL.push(`W${w.week} ${d[0].toUpperCase()}`);
+                        pL.push(`W${w.week} ${formattedDay}`);
                         pD.push(parseNum(progressData[pKey]));
                     }
                 });
@@ -263,12 +348,12 @@
             </div>
 
             <button onclick="login()" class="w-full flex items-center justify-center space-x-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 py-3.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-bold text-slate-700 dark:text-slate-200 group shadow-sm">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 group-hover:scale-110 transition-transform">
-                <span>Sign in with Google</span>
+                <i data-lucide="log-in" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                <span>Start Training</span>
             </button>
             
             <p class="text-[10px] text-slate-400 px-4 leading-normal">
-                If the popup closes instantly, ensure this domain is added to your Firebase Authorized Domains list.
+                Securely synced using your environment authentication setup.
             </p>
         </div>
     </div>
@@ -317,7 +402,7 @@
                         <p class="text-3xl font-bold tracking-tight"><span id="progress-percentage">0</span>%</p>
                         <div class="mt-4 flex justify-between items-center text-[10px] font-bold text-emerald-500">
                             <span>CLOUD SYNCED</span>
-                            <span><span id="progress-tasks">0</span> / 63 UNITS</span>
+                            <span><span id="progress-tasks">0</span> / 56 UNITS</span>
                         </div>
                     </div>
                     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl h-28">
