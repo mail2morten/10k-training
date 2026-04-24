@@ -59,20 +59,25 @@
         window.login = async () => {
             const errorEl = document.getElementById('login-error');
             const loginBtn = document.getElementById('login-btn');
-            errorEl.classList.add('hidden');
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = `<span class="animate-spin mr-2">◌</span> Redirecting...`;
+            if (errorEl) errorEl.classList.add('hidden');
+            if (loginBtn) {
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = `<span class="animate-spin mr-2">◌</span> Redirecting...`;
+            }
             
             try {
                 await setPersistence(auth, browserLocalPersistence);
-                // Switching to Redirect for better reliability in sandboxed environments
                 await signInWithRedirect(auth, provider);
             } catch (err) {
                 console.error("Auth Error:", err);
-                errorEl.textContent = `Error: ${err.code.replace('auth/', '')}`;
-                errorEl.classList.remove('hidden');
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = `<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"><span>Sign in with Google</span>`;
+                if (errorEl) {
+                    errorEl.textContent = `Error: ${err.code.replace('auth/', '')}`;
+                    errorEl.classList.remove('hidden');
+                }
+                if (loginBtn) {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = `<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"><span>Sign in with Google</span>`;
+                }
             }
         };
 
@@ -80,14 +85,8 @@
             signOut(auth).then(() => window.location.reload());
         };
 
-        // Handle the result of the redirect
         getRedirectResult(auth).catch((error) => {
             console.error("Redirect Error:", error);
-            const errorEl = document.getElementById('login-error');
-            if(errorEl) {
-                errorEl.textContent = `Login failed: ${error.message}`;
-                errorEl.classList.remove('hidden');
-            }
         });
 
         onAuthStateChanged(auth, (user) => {
@@ -106,12 +105,47 @@
             }
         });
 
+        const scheduleData = [
+            { week: 1, date: "Apr 13", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "3k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "4k Long Run" }] },
+            { week: 2, date: "Apr 20", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "4k Speed" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "5k Long Run" }] },
+            { week: 3, date: "Apr 27", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" }, { id: "fri", name: "Friday", type: "Tempo", task: "4k Tempo" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "6k Long Run" }] },
+            { week: 4, date: "May 4", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" }, { id: "fri", name: "Friday", type: "Intervals", task: "5k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "7k Long Run" }] },
+            { week: 5, date: "May 11", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" }, { id: "fri", name: "Friday", type: "Tempo", task: "5k Tempo" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "8k Long Run" }] },
+            { week: 6, date: "May 18", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" }, { id: "fri", name: "Friday", type: "Intervals", task: "4k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "9k Long Run" }] },
+            { week: 7, date: "May 25", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Recovery", task: "Taper Down" }, { id: "thu", name: "Thursday", type: "Recovery", task: "2k Very Easy" }, { id: "fri", name: "Friday", type: "Rest", task: "Rest" }, { id: "sat", name: "Saturday", type: "Rest", task: "Walk" }, { id: "sun", name: "Sunday", type: "Race", task: "10k RACE DAY!" }] }
+        ];
+
+        const allWeightKeys = [];
+        scheduleData.forEach(w => {
+            ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
+                allWeightKeys.push(`w${w.week}_${d}_weight`);
+            });
+        });
+
         function startSync(uid) {
             currentDataRef = ref(db, `users/${uid}/training_stats`);
+            
+            // Helpful timeout for rules debugging
+            const syncTimeout = setTimeout(() => {
+                const container = document.getElementById('schedule-container');
+                if (container && container.innerHTML.includes('Syncing')) {
+                    container.innerHTML = `
+                        <div class="p-8 bg-amber-50 dark:bg-amber-900/10 border-2 border-dashed border-amber-200 dark:border-amber-900/30 rounded-3xl text-center">
+                            <i data-lucide="help-circle" class="w-10 h-10 text-amber-500 mx-auto mb-4"></i>
+                            <h3 class="font-bold text-amber-800 dark:text-amber-400">Database is taking a while...</h3>
+                            <p class="text-xs text-amber-600/70 mt-2 mb-4">This usually happens if your Rules aren't set to allow "users/${uid}".</p>
+                            <button onclick="window.location.reload()" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold">Retry Sync</button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                }
+            }, 5000);
+
             onValue(currentDataRef, (snapshot) => {
+                clearTimeout(syncTimeout);
                 const data = snapshot.val();
                 if (!data) {
-                    const initial = { initializedAt: Date.now() };
+                    const initial = { initialized: true };
                     allWeightKeys.forEach(k => initial[k] = DEFAULT_WEIGHT);
                     set(currentDataRef, initial);
                     return;
@@ -121,6 +155,7 @@
                 updateCharts();
                 updateStats();
             }, (error) => {
+                clearTimeout(syncTimeout);
                 console.error("Database Access Error:", error);
                 const container = document.getElementById('schedule-container');
                 if(container) {
@@ -128,7 +163,7 @@
                         <div class="p-8 bg-rose-50 dark:bg-rose-900/10 border-2 border-dashed border-rose-200 dark:border-rose-900/30 rounded-3xl text-center">
                             <i data-lucide="lock" class="w-10 h-10 text-rose-500 mx-auto mb-4"></i>
                             <h3 class="font-bold text-rose-800 dark:text-rose-400">Database Locked</h3>
-                            <p class="text-xs text-rose-600/70 mt-2">Update your Database Rules to allow access to users/${uid}</p>
+                            <p class="text-xs text-rose-600/70 mt-2">Check your Firebase Rules for path: users/${uid}</p>
                         </div>
                     `;
                     lucide.createIcons();
@@ -293,7 +328,7 @@
             </button>
             
             <p class="text-[10px] text-slate-400 px-4 leading-normal">
-                Uses Google Secure Redirect. Your data stays private.
+                Redirecting secure login. Stay in the flow.
             </p>
         </div>
     </div>
