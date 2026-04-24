@@ -11,115 +11,41 @@
             darkMode: 'class',
         }
     </script>
-    <!-- Theme Initialization -->
-    <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-200 font-sans selection:bg-emerald-500/30 transition-colors duration-300">
 
-    <!-- Navigation / Header -->
-    <nav class="border-b border-slate-200 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-1.5 sm:space-x-2">
-                <i data-lucide="trophy" class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500"></i>
-                <span class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">Run<span class="text-emerald-500">Forge</span></span>
-            </div>
-            <div class="flex items-center space-x-2 sm:space-x-4 text-sm font-medium" id="auth-status">
-                <span class="text-slate-600 dark:text-slate-400 text-[10px] sm:text-xs bg-slate-100 dark:bg-slate-400/10 px-2 py-1 sm:py-1.5 rounded-full flex items-center">
-                    <i data-lucide="info" class="w-3 h-3 mr-1"></i>
-                    <span class="hidden sm:inline">Cycle: Pending → Done → Missed</span>
-                    <span class="sm:hidden">Cycle Status</span>
-                </span>
-                <button id="theme-toggle" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Toggle Theme">
-                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
-                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12">
-        
-        <!-- Hero Section -->
-        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16 space-y-4 sm:space-y-6">
-            <div class="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold mb-2 sm:mb-4">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                <span>Race Day: May 31st</span>
-            </div>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2 sm:mb-4">
-                7-Week <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 dark:from-emerald-400 to-cyan-500 dark:to-cyan-400">10k Mastery</span>
-            </h1>
-            <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed px-2">
-                Track performance and physique.
-                <strong class="text-slate-900 dark:text-slate-200 font-semibold block mt-1 sm:mt-2">Consistency is the bridge between goals and accomplishment.</strong>
-            </p>
+        // UPDATED CONFIGURATION WITH REGIONAL URL
+        const firebaseConfig = {
+            apiKey: "AIzaSyADK2YRcaR-uk5zrwri-qWR7DAWsaQ35KY",
+            authDomain: "runforge-cede3.firebaseapp.com",
+            projectId: "runforge-cede3",
+            storageBucket: "runforge-cede3.firebasestorage.app",
+            messagingSenderId: "424668696488",
+            appId: "1:424668696488:web:1d0f3d2ed844871159979d",
+            measurementId: "G-G2LH33W255",
+            // Corrected regional URL for europe-west1
+            databaseURL: "https://runforge-cede3-default-rtdb.europe-west1.firebasedatabase.app"
+        };
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto mt-8">
-                <!-- Progress Bar Card -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden transition-colors h-full">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-800">
-                        <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-1000 ease-out" style="width: 0%"></div>
-                    </div>
-                    <div class="flex justify-between items-end">
-                        <div class="text-left">
-                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Plan Completion</p>
-                            <p class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"><span id="progress-percentage">0</span>%</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Tasks Completed</p>
-                            <p class="text-lg sm:text-xl font-bold text-emerald-500 dark:text-emerald-400"><span id="progress-tasks">0</span> <span class="text-slate-400 dark:text-slate-500 text-sm sm:text-base">/ 56</span></p>
-                        </div>
-                    </div>
-                </div>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dataRef = ref(db, 'training_stats');
 
-                <!-- Pace Graph Card -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl transition-colors h-full">
-                    <div class="flex items-center space-x-2 mb-2">
-                        <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Pace Trend (min/km)</h3>
-                    </div>
-                    <div class="h-32 w-full">
-                        <canvas id="paceChart"></canvas>
-                    </div>
-                </div>
+        // --- Data & State ---
+        const DEFAULT_WEIGHT = 83.1;
+        let progressData = {};
+        let paceChart = null;
+        let weightChart = null;
+        let isConnected = false;
 
-                <!-- Weight Graph Card -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl transition-colors h-full">
-                    <div class="flex items-center space-x-2 mb-2">
-                        <i data-lucide="scale" class="w-4 h-4 text-cyan-500"></i>
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Weight Progression (kg)</h3>
-                    </div>
-                    <div class="h-32 w-full">
-                        <canvas id="weightChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Schedule Grid (Populated via JS) -->
-        <div id="schedule-container" class="space-y-6 sm:space-y-8"></div>
-    </main>
-
-    <footer class="border-t border-slate-200 dark:border-slate-800/60 mt-12 sm:mt-20 py-8 text-center text-slate-500 text-xs sm:text-sm transition-colors duration-300">
-        <div class="flex items-center justify-center space-x-2 mb-2">
-            <i data-lucide="footprints" class="w-4 h-4"></i>
-            <span>Tracked. Forged. Conquered.</span>
-        </div>
-    </footer>
-
-    <script>
-        lucide.createIcons();
-
-        // --- Data ---
         const scheduleData = [
             { week: 1, date: "Apr 13", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "3k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "4k Long Run" }] },
             { week: 2, date: "Apr 20", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "4k Speed" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "5k Long Run" }] },
@@ -130,23 +56,14 @@
             { week: 7, date: "May 25", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Recovery", task: "Taper Down" }, { id: "thu", name: "Thursday", type: "Recovery", task: "2k Very Easy" }, { id: "fri", name: "Friday", type: "Rest", task: "Rest" }, { id: "sat", name: "Saturday", type: "Rest", task: "Walk" }, { id: "sun", name: "Sunday", type: "Race", task: "10k RACE DAY!" }] }
         ];
 
-        // --- State ---
-        const DEFAULT_WEIGHT = 83.1;
-        const LOCAL_STORAGE_KEY = '10kTrainingProgress_MasterTracker_v3';
-        let progressData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || {};
-        let paceChart = null;
-        let weightChart = null;
-
-        // Flatten all keys for forward propagation logic
-        const allDaysOrder = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
         const allWeightKeys = [];
         scheduleData.forEach(w => {
-            allDaysOrder.forEach(d => {
+            ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
                 allWeightKeys.push(`w${w.week}_${d}_weight`);
             });
         });
 
-        // --- Helpers ---
+        // --- Core Helpers ---
         const getTypeColor = (type) => {
             switch (type) {
                 case 'Rest': return 'text-slate-500 bg-slate-100 dark:bg-slate-800/50 border-transparent';
@@ -156,14 +73,10 @@
                 case 'Tempo': return 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200';
                 case 'Intervals': return 'text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-500/10 border-pink-200';
                 case 'Long': return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200';
-                case 'Race': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-500/20 border-yellow-300 shadow-[0_0_10px_rgba(234,179,8,0.2)]';
+                case 'Race': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-500/20 border-yellow-300';
                 default: return 'text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800';
             }
         };
-
-        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-emerald-500"><polyline points="20 6 9 17 4 12"/></svg>`;
-        const crossIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-rose-500"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-        const circleIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-300 dark:text-slate-600"><circle cx="12" cy="12" r="10"/></svg>`;
 
         const parseNum = (str) => {
             if (str === null || str === undefined || str === '') return null;
@@ -182,130 +95,125 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         };
 
-        // --- Charts ---
-        function updateCharts() {
-            const paceCtx = document.getElementById('paceChart').getContext('2d');
-            const weightCtx = document.getElementById('weightChart').getContext('2d');
-            
-            const paceDays = ['mon', 'fri', 'sun'];
-            const allDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-            
-            let paceLabels = [];
-            let paceData = [];
-            let weightLabels = [];
-            let weightData = [];
-
-            scheduleData.forEach(week => {
-                allDays.forEach(dayId => {
-                    const weightKey = `w${week.week}_${dayId}_weight`;
-                    const wVal = parseNum(progressData[weightKey]) || DEFAULT_WEIGHT;
-                    weightLabels.push(`W${week.week} ${dayId.charAt(0).toUpperCase()}`);
-                    weightData.push(wVal);
-
-                    if (paceDays.includes(dayId)) {
-                        const paceKey = `w${week.week}_${dayId}_pace`;
-                        const pVal = parseNum(progressData[paceKey]);
-                        paceLabels.push(`W${week.week} ${dayId.charAt(0).toUpperCase()}`);
-                        paceData.push(pVal);
-                    }
-                });
-            });
-
-            // Update Pace Chart
-            if (paceChart) {
-                paceChart.data.labels = paceLabels;
-                paceChart.data.datasets[0].data = paceData;
-                paceChart.update();
-            } else {
-                paceChart = new Chart(paceCtx, {
-                    type: 'line',
-                    data: { labels: paceLabels, datasets: [{ label: 'Pace', data: paceData, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 2, tension: 0.3, fill: true, pointRadius: 2, spanGaps: true }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { reverse: true, ticks: { font: { size: 8 }, callback: (v) => formatPaceLabel(v) } }, x: { display: false } } }
-                });
+        // --- Firebase Listeners & Actions ---
+        onValue(dataRef, (snapshot) => {
+            isConnected = true;
+            const data = snapshot.val();
+            if (!data) {
+                // Initialize cloud data if empty
+                const initial = {};
+                allWeightKeys.forEach(k => initial[k] = DEFAULT_WEIGHT);
+                set(dataRef, initial);
+                return;
             }
-
-            // Update Weight Chart
-            if (weightChart) {
-                weightChart.data.labels = weightLabels;
-                weightChart.data.datasets[0].data = weightData;
-                weightChart.update();
-            } else {
-                weightChart = new Chart(weightCtx, {
-                    type: 'line',
-                    data: { labels: weightLabels, datasets: [{ label: 'Weight', data: weightData, borderColor: '#06b6d4', backgroundColor: 'rgba(6, 182, 212, 0.1)', borderWidth: 2, tension: 0.3, fill: true, pointRadius: 2, spanGaps: true }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { font: { size: 8 } } }, x: { display: false } } }
-                });
+            progressData = data;
+            renderSchedule();
+            updateCharts();
+            updateStats();
+        }, (error) => {
+            console.error("Firebase Error:", error);
+            const container = document.getElementById('schedule-container');
+            if (container) {
+                container.innerHTML = `
+                    <div class="text-center py-20 bg-white dark:bg-slate-900 border-2 border-dashed border-rose-200 dark:border-rose-900/30 rounded-3xl mx-4">
+                        <i data-lucide="alert-octagon" class="w-12 h-12 text-rose-500 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Connection Blocked</h3>
+                        <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto text-sm px-4">
+                            Check your <strong>Rules</strong> tab and ensure they are both set to <code>true</code>.
+                        </p>
+                    </div>
+                `;
+                lucide.createIcons();
             }
-        }
+        });
 
-        // --- Rendering ---
+        window.handleInput = (el) => {
+            const key = el.dataset.key;
+            update(dataRef, { [key]: el.value });
+        };
+
+        window.handleWeightInput = (el) => {
+            const key = el.dataset.key;
+            const newValue = el.value;
+            const startIndex = allWeightKeys.indexOf(key);
+            if (startIndex !== -1) {
+                const updates = {};
+                for (let i = startIndex; i < allWeightKeys.length; i++) {
+                    updates[allWeightKeys[i]] = newValue;
+                }
+                update(dataRef, updates);
+            }
+        };
+
+        window.toggleTask = (key) => {
+            const current = progressData[key] || 0;
+            const next = (current + 1) % 3;
+            update(dataRef, { [key]: next });
+        };
+
+        // --- UI Rendering ---
         function renderSchedule() {
             const container = document.getElementById('schedule-container');
-            let htmlString = '';
+            if (!container) return;
 
-            scheduleData.forEach(weekData => {
-                const alcKey = `w${weekData.week}_alcohol`;
+            const html = scheduleData.map(week => {
+                const alcKey = `w${week.week}_alcohol`;
                 const alcStatus = progressData[alcKey] || 0;
 
-                let daysHtml = '';
-                weekData.days.forEach(day => {
-                    const taskKey = `w${weekData.week}_${day.id}`;
-                    const paceKey = `${taskKey}_pace`;
-                    const weightKey = `${taskKey}_weight`;
-                    
-                    const status = progressData[taskKey] || 0;
-                    const paceValue = progressData[paceKey] || '';
-                    const weightValue = progressData[weightKey] !== undefined ? progressData[weightKey] : DEFAULT_WEIGHT;
-                    
-                    const hasPaceInput = ['mon', 'fri', 'sun'].includes(day.id);
-                    const isRest = day.type === 'Rest';
+                const daysHtml = week.days.map(day => {
+                    const tKey = `w${week.week}_${day.id}`;
+                    const pKey = `${tKey}_pace`;
+                    const wKey = `${tKey}_weight`;
+                    const status = progressData[tKey] || 0;
+                    const paceValue = progressData[pKey] || '';
+                    const weightValue = progressData[wKey] !== undefined ? progressData[wKey] : DEFAULT_WEIGHT;
+                    const hasPace = ['mon', 'fri', 'sun'].includes(day.id);
 
-                    let btnClass = (status === 1) ? 'bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/30' : 
-                                   (status === 2) ? 'bg-rose-50 dark:bg-rose-500/5 border-rose-200 dark:border-rose-500/30' : 
+                    let cardClass = status === 1 ? 'bg-emerald-50/50 dark:bg-emerald-500/5 border-emerald-200' :
+                                   status === 2 ? 'bg-rose-50/50 dark:bg-rose-500/5 border-rose-200' :
                                    'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800';
 
-                    daysHtml += `
-                        <div class="relative flex flex-col p-3 rounded-xl border transition-all duration-200 ${btnClass}">
-                            <button data-task="${taskKey}" class="absolute inset-0 z-10" title="Cycle Status"></button>
-                            
-                            <div class="relative z-20 pointer-events-none flex justify-between items-center mb-2">
-                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">${day.name}</span>
-                                <div>${status === 1 ? checkIcon : (status === 2 ? crossIcon : circleIcon)}</div>
+                    return `
+                        <div class="relative flex flex-col p-3 rounded-xl border transition-all ${cardClass}">
+                            <button onclick="toggleTask('${tKey}')" class="absolute inset-0 z-10" title="Toggle Status"></button>
+                            <div class="flex justify-between items-center mb-2 z-20 pointer-events-none">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase">${day.name}</span>
+                                <i data-lucide="${status === 1 ? 'check-circle' : (status === 2 ? 'x-circle' : 'circle')}" 
+                                   class="w-4 h-4 ${status === 1 ? 'text-emerald-500' : (status === 2 ? 'text-rose-500' : 'text-slate-300 dark:text-slate-600')}"></i>
                             </div>
-
-                            <div class="relative z-20 pointer-events-none mt-auto inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-bold uppercase mb-1.5 w-max border ${getTypeColor(day.type)}">
+                            <div class="z-20 pointer-events-none inline-flex px-1.5 py-0.5 rounded text-[8px] font-bold uppercase mb-1.5 w-max border ${getTypeColor(day.type)}">
                                 ${day.type}
                             </div>
-
-                            <span class="relative z-20 pointer-events-none text-xs font-bold leading-tight mb-3 ${status === 1 ? 'text-slate-400 line-through' : (status === 2 ? 'text-rose-300 dark:text-rose-900/40' : 'dark:text-white')}">
+                            <span class="z-20 pointer-events-none text-xs font-bold mb-3 ${status === 1 ? 'text-slate-400 line-through' : 'dark:text-white'}">
                                 ${day.task}
                             </span>
-
-                            <div class="relative z-30 space-y-1.5 mt-auto">
-                                ${hasPaceInput ? `
+                            <div class="relative z-30 space-y-1 mt-auto">
+                                ${hasPace ? `
                                 <div class="relative">
-                                    <input type="text" placeholder="Pace" value="${paceValue}" data-key="${paceKey}" oninput="handleInput(this)" onclick="event.stopPropagation()" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-md pl-2 pr-6 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-emerald-500" />
+                                    <input type="text" placeholder="Pace" data-key="${pKey}" value="${paceValue}" oninput="handleInput(this)" 
+                                           class="w-full bg-slate-100 dark:bg-slate-800 rounded px-2 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-emerald-500"/>
                                     <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] text-slate-400 font-bold">/km</span>
                                 </div>` : ''}
                                 <div class="relative">
-                                    <input type="text" placeholder="Weight" value="${weightValue}" data-key="${weightKey}" onchange="handleWeightInput(this)" onclick="event.stopPropagation()" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-md pl-2 pr-6 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                                    <input type="text" placeholder="Weight" data-key="${wKey}" value="${weightValue}" onchange="handleWeightInput(this)"
+                                           class="w-full bg-slate-100 dark:bg-slate-800 rounded px-2 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-cyan-500"/>
                                     <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] text-slate-400 font-bold">/kg</span>
                                 </div>
                             </div>
                         </div>
                     `;
-                });
+                }).join('');
 
-                htmlString += `
-                    <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+                return `
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm mb-8">
                         <div class="bg-slate-50 dark:bg-slate-800/40 px-4 py-3 flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80">
                             <div class="flex items-center space-x-3">
-                                <div class="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold w-8 h-8 rounded-lg flex items-center justify-center text-xs">W${weekData.week}</div>
-                                <h2 class="text-sm font-bold dark:text-white">Week ${weekData.week} - ${weekData.date}</h2>
+                                <div class="bg-emerald-500 text-white font-bold w-8 h-8 rounded-lg flex items-center justify-center text-xs">W${week.week}</div>
+                                <h2 class="text-sm font-bold">Week ${week.week} - ${week.date}</h2>
                             </div>
-                            <button data-task="${alcKey}" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all ${progressData[alcKey] === 1 ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'bg-white dark:bg-slate-900 border-slate-200'}">
+                            <button onclick="toggleTask('${alcKey}')" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all ${alcStatus === 1 ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white dark:bg-slate-900 border-slate-200'}">
                                 <span>Dry Discipline</span>
-                                ${progressData[alcKey] === 1 ? checkIcon : (progressData[alcKey] === 2 ? crossIcon : circleIcon)}
+                                <i data-lucide="${alcStatus === 1 ? 'shield-check' : 'shield'}" class="w-3 h-3"></i>
                             </button>
                         </div>
                         <div class="p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5">
@@ -313,77 +221,170 @@
                         </div>
                     </div>
                 `;
+            }).join('');
+
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function updateCharts() {
+            const paceCtx = document.getElementById('paceChart')?.getContext('2d');
+            const weightCtx = document.getElementById('weightChart')?.getContext('2d');
+            if (!paceCtx || !weightCtx) return;
+
+            let pL = [], pD = [], wL = [], wD = [];
+            scheduleData.forEach(w => {
+                ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
+                    const wKey = `w${w.week}_${d}_weight`;
+                    wL.push(`W${w.week} ${d[0].toUpperCase()}`);
+                    wD.push(parseNum(progressData[wKey]) || DEFAULT_WEIGHT);
+
+                    if (['mon', 'fri', 'sun'].includes(d)) {
+                        const pKey = `w${w.week}_${d}_pace`;
+                        pL.push(`W${w.week} ${d[0].toUpperCase()}`);
+                        pD.push(parseNum(progressData[pKey]));
+                    }
+                });
             });
 
-            container.innerHTML = htmlString;
-            updateStats();
-            updateCharts();
+            if (paceChart) {
+                paceChart.data.labels = pL;
+                paceChart.data.datasets[0].data = pD;
+                paceChart.update();
+            } else {
+                paceChart = new Chart(paceCtx, {
+                    type: 'line',
+                    data: { labels: pL, datasets: [{ data: pD, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 2, tension: 0.3, fill: true, pointRadius: 2, spanGaps: true }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { reverse: true, ticks: { callback: v => formatPaceLabel(v) } }, x: { display: false } } }
+                });
+            }
+
+            if (weightChart) {
+                weightChart.data.labels = wL;
+                weightChart.data.datasets[0].data = wD;
+                weightChart.update();
+            } else {
+                weightChart = new Chart(weightCtx, {
+                    type: 'line',
+                    data: { labels: wL, datasets: [{ data: wD, borderColor: '#06b6d4', backgroundColor: 'rgba(6, 182, 212, 0.1)', borderWidth: 2, tension: 0.3, fill: true, pointRadius: 2, spanGaps: true }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false } } }
+                });
+            }
         }
 
         function updateStats() {
-            const totalTasks = scheduleData.length * 8;
-            const completedTasks = Object.keys(progressData).filter(k => !k.endsWith('_pace') && !k.endsWith('_weight') && progressData[k] === 1).length;
-            const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-            document.getElementById('progress-tasks').textContent = completedTasks;
-            document.getElementById('progress-percentage').textContent = completionPercentage;
-            document.getElementById('progress-bar-fill').style.width = `${completionPercentage}%`;
+            const total = (scheduleData.length * 7) + scheduleData.length; 
+            const done = Object.keys(progressData).filter(k => !k.includes('_pace') && !k.includes('_weight') && progressData[k] === 1).length;
+            const percentage = Math.round((done / total) * 100);
+
+            const pTasks = document.getElementById('progress-tasks');
+            const pPerc = document.getElementById('progress-percentage');
+            const pBar = document.getElementById('progress-bar-fill');
+
+            if (pTasks) pTasks.textContent = done;
+            if (pPerc) pPerc.textContent = percentage;
+            if (pBar) pBar.style.width = `${percentage}%`;
         }
 
-        // Forward propagation logic for weight - now triggers on ENTER or BLUR
-        function handleWeightInput(el) {
-            const key = el.getAttribute('data-key');
-            const newValue = el.value;
-            
-            // Find current key position in chronological order
-            const startIndex = allWeightKeys.indexOf(key);
-            
-            if (startIndex !== -1) {
-                // Update from this day onwards
-                for (let i = startIndex; i < allWeightKeys.length; i++) {
-                    progressData[allWeightKeys[i]] = newValue;
-                }
-            }
+        window.toggleTheme = () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        };
 
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
-            
-            // Re-render to propagate the visual value to all future fields
-            renderSchedule();
+        // Theme init
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
         }
-
-        function handleInput(el) {
-            const key = el.getAttribute('data-key');
-            progressData[key] = el.value;
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
-            updateCharts();
-        }
-
-        // --- Interaction ---
-        document.getElementById('schedule-container').addEventListener('click', (e) => {
-            const btn = e.target.closest('button[data-task]');
-            if (!btn) return;
-            const key = btn.getAttribute('data-task');
-            progressData[key] = ((progressData[key] || 0) + 1) % 3;
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
-            renderSchedule();
-        });
-
-        function initApp() {
-            // If w1_mon_weight is missing, set initial default
-            if (progressData['w1_mon_weight'] === undefined) {
-                allWeightKeys.forEach(key => {
-                    progressData[key] = DEFAULT_WEIGHT;
-                });
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
-            }
-
-            renderSchedule(); 
-            document.getElementById('theme-toggle').addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
-                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-            });
-        }
-
-        window.onload = initApp;
     </script>
+</head>
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-200 font-sans selection:bg-emerald-500/30 transition-colors duration-300">
+
+    <nav class="border-b border-slate-200 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="trophy" class="w-6 h-6 text-emerald-500"></i>
+                <span class="text-xl font-bold tracking-tight">Run<span class="text-emerald-500">Forge</span></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="hidden sm:flex items-center text-[10px] bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full uppercase font-bold text-slate-500">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                    Live Cloud Sync
+                </div>
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <!-- Hero -->
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-6">
+            <div class="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-1.5 rounded-full text-sm font-semibold">
+                <i data-lucide="calendar" class="w-4 h-4"></i>
+                <span>Race Day: May 31st</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight">
+                7-Week <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-400">10k Mastery</span>
+            </h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                Track your performance and physique in real-time. Cloud-synced mastery.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
+                <!-- Progress -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-800">
+                        <div id="progress-bar-fill" class="h-full bg-emerald-500 transition-all duration-1000 ease-out w-0"></div>
+                    </div>
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Completion</p>
+                    <p class="text-3xl font-bold"><span id="progress-percentage">0</span>%</p>
+                    <div class="mt-4 flex justify-between items-center text-xs font-bold text-emerald-500">
+                        <span>Status</span>
+                        <span><span id="progress-tasks">0</span> / 63 Tasks</span>
+                    </div>
+                </div>
+
+                <!-- Pace Chart -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
+                        <h3 class="text-[10px] font-bold uppercase text-slate-400">Pace Trend (min/km)</h3>
+                    </div>
+                    <div class="h-24">
+                        <canvas id="paceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Weight Chart -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i data-lucide="scale" class="w-4 h-4 text-cyan-500"></i>
+                        <h3 class="text-[10px] font-bold uppercase text-slate-400">Weight (kg)</h3>
+                    </div>
+                    <div class="h-24">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="schedule-container">
+            <!-- Populated via Firebase -->
+             <div class="flex flex-col items-center justify-center py-20 text-slate-400 animate-pulse">
+                <i data-lucide="cloud-lightning" class="w-10 h-10 mb-4"></i>
+                <p class="font-bold">Connecting to Cloud...</p>
+             </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800/60 py-10 text-center text-slate-500 text-sm">
+        <div class="flex items-center justify-center space-x-2">
+            <i data-lucide="footprints" class="w-4 h-4"></i>
+            <span>Tracked. Forged. Conquered.</span>
+        </div>
+    </footer>
+
 </body>
 </html>
