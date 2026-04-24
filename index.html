@@ -288,7 +288,7 @@
                                     <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] text-slate-400 font-bold">/km</span>
                                 </div>` : ''}
                                 <div class="relative">
-                                    <input type="text" placeholder="Weight" value="${weightValue}" data-key="${weightKey}" oninput="handleWeightInput(this)" onclick="event.stopPropagation()" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-md pl-2 pr-6 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                                    <input type="text" placeholder="Weight" value="${weightValue}" data-key="${weightKey}" onchange="handleWeightInput(this)" onclick="event.stopPropagation()" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-md pl-2 pr-6 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
                                     <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] text-slate-400 font-bold">/kg</span>
                                 </div>
                             </div>
@@ -329,7 +329,7 @@
             document.getElementById('progress-bar-fill').style.width = `${completionPercentage}%`;
         }
 
-        // Forward propagation logic for weight
+        // Forward propagation logic for weight - now triggers on ENTER or BLUR
         function handleWeightInput(el) {
             const key = el.getAttribute('data-key');
             const newValue = el.value;
@@ -346,8 +346,7 @@
 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
             
-            // Partial re-render (we need to update other inputs in the DOM)
-            // To keep it simple and reactive, we re-render the whole container
+            // Re-render to propagate the visual value to all future fields
             renderSchedule();
         }
 
