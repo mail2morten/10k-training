@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>10k Training Plan</title>
+    <title>RunForge | 10k Training Plan</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -21,6 +21,8 @@
     </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-200 font-sans selection:bg-emerald-500/30 transition-colors duration-300">
 
@@ -32,9 +34,10 @@
                 <span class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">Run<span class="text-emerald-500">Forge</span></span>
             </div>
             <div class="flex items-center space-x-2 sm:space-x-4 text-sm font-medium" id="auth-status">
-                <span class="text-emerald-600 dark:text-emerald-400 text-[10px] sm:text-xs bg-emerald-100 dark:bg-emerald-400/10 px-2 py-1 sm:py-1.5 rounded-full flex items-center" id="status-online">
-                    <i data-lucide="save" class="w-3 h-3 sm:mr-1"></i>
-                    <span class="hidden sm:inline">Local Save Active</span>
+                <span class="text-slate-600 dark:text-slate-400 text-[10px] sm:text-xs bg-slate-100 dark:bg-slate-400/10 px-2 py-1 sm:py-1.5 rounded-full flex items-center">
+                    <i data-lucide="info" class="w-3 h-3 mr-1"></i>
+                    <span class="hidden sm:inline">Cycle: Pending → Done → Missed</span>
+                    <span class="sm:hidden">Cycle Status</span>
                 </span>
                 <button id="theme-toggle" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Toggle Theme">
                     <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
@@ -56,23 +59,47 @@
                 7-Week <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 dark:from-emerald-400 to-cyan-500 dark:to-cyan-400">10k Mastery</span>
             </h1>
             <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed px-2">
-                The definitive schedule to crush your 10k goal. 
-                <strong class="text-slate-900 dark:text-slate-200 font-semibold block mt-1 sm:mt-2">Key Routine: Tue Rest, Wed HIIT, Sun Long Run.</strong>
+                Track performance and physique.
+                <strong class="text-slate-900 dark:text-slate-200 font-semibold block mt-1 sm:mt-2">Consistency is the bridge between goals and accomplishment.</strong>
             </p>
 
-            <!-- Progress Bar -->
-            <div class="mt-6 sm:mt-8 max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-300">
-                <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-800">
-                    <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-1000 ease-out" style="width: 0%"></div>
-                </div>
-                <div class="flex justify-between items-end">
-                    <div class="text-left">
-                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Plan Completion</p>
-                        <p class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"><span id="progress-percentage">0</span>%</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto mt-8">
+                <!-- Progress Bar Card -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden transition-colors h-full">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-slate-100 dark:bg-slate-800">
+                        <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-1000 ease-out" style="width: 0%"></div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Tasks Done</p>
-                        <p class="text-lg sm:text-xl font-bold text-emerald-500 dark:text-emerald-400"><span id="progress-tasks">0</span> <span class="text-slate-400 dark:text-slate-500 text-sm sm:text-base">/ 56</span></p>
+                    <div class="flex justify-between items-end">
+                        <div class="text-left">
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Plan Completion</p>
+                            <p class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white"><span id="progress-percentage">0</span>%</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">Tasks Completed</p>
+                            <p class="text-lg sm:text-xl font-bold text-emerald-500 dark:text-emerald-400"><span id="progress-tasks">0</span> <span class="text-slate-400 dark:text-slate-500 text-sm sm:text-base">/ 56</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pace Graph Card -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl transition-colors h-full">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Pace Trend (min/km)</h3>
+                    </div>
+                    <div class="h-32 w-full">
+                        <canvas id="paceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Weight Graph Card -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl transition-colors h-full">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i data-lucide="scale" class="w-4 h-4 text-cyan-500"></i>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Weight Progression (kg)</h3>
+                    </div>
+                    <div class="h-32 w-full">
+                        <canvas id="weightChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -80,257 +107,208 @@
 
         <!-- Schedule Grid (Populated via JS) -->
         <div id="schedule-container" class="space-y-6 sm:space-y-8"></div>
-
-        <!-- Injury Prevention & Tips Section -->
-        <div class="mt-16 sm:mt-20">
-            <div class="text-center mb-8 sm:mb-10">
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white flex items-center justify-center space-x-2 sm:space-x-3">
-                    <i data-lucide="shield-alert" class="w-6 h-6 sm:w-8 sm:h-8 text-emerald-500 dark:text-emerald-400"></i>
-                    <span>Injury Prevention & Pro Tips</span>
-                </h2>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <!-- Tip 1 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-blue-400 dark:hover:border-blue-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 dark:bg-blue-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="activity" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 dark:text-blue-400"></i>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Monday "Shakeouts"</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        After Sunday's long run, legs feel heavy. Keep this 2k/3k incredibly slow. Its only job is to increase blood flow and flush lactic acid before Tuesday's full rest.
-                    </p>
-                </div>
-
-                <!-- Tip 2 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-purple-400 dark:hover:border-purple-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-50 dark:bg-purple-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="trending-up" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-500 dark:text-purple-400"></i>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Friday is "Quality"</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Because Saturday is a rest day, afford to push yourself hard during Friday's intervals & tempo runs. Don't worry about being too tired for Sunday's Long Run.
-                    </p>
-                </div>
-
-                <!-- Tip 3 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-cyan-400 dark:hover:border-cyan-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-cyan-50 dark:bg-cyan-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="droplet" class="w-5 h-5 sm:w-6 sm:h-6 text-cyan-500 dark:text-cyan-400"></i>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Hydration & Fuel</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Hardest efforts fall on Wed, Fri, and Sun. Ensure you eat enough complex carbs and drink plenty of water the <em>day before</em> each of these critical sessions.
-                    </p>
-                </div>
-
-                <!-- Tip 4 -->
-                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-emerald-400 dark:hover:border-emerald-500/30 transition-colors group shadow-sm dark:shadow-none">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                        <i data-lucide="beer" class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500 dark:text-emerald-400"></i>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Alcohol-Free Recovery</h3>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Cutting alcohol significantly improves sleep architecture, hydration levels, and muscle protein synthesis. Use the toggles to track your successful weeks!
-                    </p>
-                </div>
-            </div>
-        </div>
     </main>
 
     <footer class="border-t border-slate-200 dark:border-slate-800/60 mt-12 sm:mt-20 py-8 text-center text-slate-500 text-xs sm:text-sm transition-colors duration-300">
         <div class="flex items-center justify-center space-x-2 mb-2">
             <i data-lucide="footprints" class="w-4 h-4"></i>
-            <span>Keep pushing forward.</span>
+            <span>Tracked. Forged. Conquered.</span>
         </div>
-        <p>Your progress is saved securely to this device.</p>
     </footer>
 
-    <!-- Main Logic -->
     <script>
-        // Initialize Lucide icons for static elements
         lucide.createIcons();
 
         // --- Data ---
         const scheduleData = [
-            {
-                week: 1, date: "Apr 13",
-                days: [
-                    { id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" },
-                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
-                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
-                    { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" },
-                    { id: "fri", name: "Friday", type: "Speed", task: "3k (with 4x 1-min fast)" },
-                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
-                    { id: "sun", name: "Sunday", type: "Long", task: "4k Long Run" },
-                ]
-            },
-            {
-                week: 2, date: "Apr 20",
-                days: [
-                    { id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" },
-                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
-                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
-                    { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" },
-                    { id: "fri", name: "Friday", type: "Speed", task: "4k (with 5x 1-min fast)" },
-                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
-                    { id: "sun", name: "Sunday", type: "Long", task: "5k Long Run" },
-                ]
-            },
-            {
-                week: 3, date: "Apr 27",
-                days: [
-                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
-                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
-                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
-                    { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" },
-                    { id: "fri", name: "Friday", type: "Tempo", task: "4k Tempo" },
-                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
-                    { id: "sun", name: "Sunday", type: "Long", task: "6k Long Run" },
-                ]
-            },
-            {
-                week: 4, date: "May 4",
-                days: [
-                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
-                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
-                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
-                    { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" },
-                    { id: "fri", name: "Friday", type: "Intervals", task: "5k Intervals" },
-                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
-                    { id: "sun", name: "Sunday", type: "Long", task: "7k Long Run" },
-                ]
-            },
-            {
-                week: 5, date: "May 11",
-                days: [
-                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
-                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
-                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
-                    { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" },
-                    { id: "fri", name: "Friday", type: "Tempo", task: "5k Tempo" },
-                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
-                    { id: "sun", name: "Sunday", type: "Long", task: "8k Long Run" },
-                ]
-            },
-            {
-                week: 6, date: "May 18",
-                days: [
-                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
-                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
-                    { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" },
-                    { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" },
-                    { id: "fri", name: "Friday", type: "Intervals", task: "4k Intervals" },
-                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest" },
-                    { id: "sun", name: "Sunday", type: "Long", task: "9k Long Run" },
-                ]
-            },
-            {
-                week: 7, date: "May 25",
-                days: [
-                    { id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" },
-                    { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" },
-                    { id: "wed", name: "Wednesday", type: "Recovery", task: "Skip or go very light!" },
-                    { id: "thu", name: "Thursday", type: "Recovery", task: "2k Very Easy" },
-                    { id: "fri", name: "Friday", type: "Rest", task: "Rest" },
-                    { id: "sat", name: "Saturday", type: "Rest", task: "Rest / Walk" },
-                    { id: "sun", name: "Sunday", type: "Race", task: "10k RACE DAY!" },
-                ]
-            }
+            { week: 1, date: "Apr 13", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "3k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "4k Long Run" }] },
+            { week: 2, date: "Apr 20", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "4k Speed" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "5k Long Run" }] },
+            { week: 3, date: "Apr 27", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" }, { id: "fri", name: "Friday", type: "Tempo", task: "4k Tempo" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "6k Long Run" }] },
+            { week: 4, date: "May 4", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" }, { id: "fri", name: "Friday", type: "Intervals", task: "5k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "7k Long Run" }] },
+            { week: 5, date: "May 11", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" }, { id: "fri", name: "Friday", type: "Tempo", task: "5k Tempo" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "8k Long Run" }] },
+            { week: 6, date: "May 18", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" }, { id: "fri", name: "Friday", type: "Intervals", task: "4k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "9k Long Run" }] },
+            { week: 7, date: "May 25", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Recovery", task: "Taper Down" }, { id: "thu", name: "Thursday", type: "Recovery", task: "2k Very Easy" }, { id: "fri", name: "Friday", type: "Rest", task: "Rest" }, { id: "sat", name: "Saturday", type: "Rest", task: "Walk" }, { id: "sun", name: "Sunday", type: "Race", task: "10k RACE DAY!" }] }
         ];
 
         // --- State ---
-        const LOCAL_STORAGE_KEY = '10kTrainingProgress';
+        const DEFAULT_WEIGHT = 83.1;
+        const LOCAL_STORAGE_KEY = '10kTrainingProgress_MasterTracker_v3';
         let progressData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || {};
+        let paceChart = null;
+        let weightChart = null;
 
-        // --- Helper Functions ---
+        // Flatten all keys for forward propagation logic
+        const allDaysOrder = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        const allWeightKeys = [];
+        scheduleData.forEach(w => {
+            allDaysOrder.forEach(d => {
+                allWeightKeys.push(`w${w.week}_${d}_weight`);
+            });
+        });
+
+        // --- Helpers ---
         const getTypeColor = (type) => {
             switch (type) {
-                case 'Rest': return 'text-slate-500 bg-slate-100 dark:bg-slate-800/50 border-transparent dark:border-slate-700';
-                case 'Recovery': return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20';
-                case 'Hard': return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 border-orange-200 dark:border-orange-500/20';
-                case 'Speed': return 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/10 border-purple-200 dark:border-purple-500/20';
-                case 'Tempo': return 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/20';
-                case 'Intervals': return 'text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-500/10 border-pink-200 dark:border-pink-500/20';
-                case 'Long': return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20';
-                case 'Race': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-500/20 border-yellow-300 dark:border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.2)] dark:shadow-[0_0_15px_rgba(234,179,8,0.3)]';
+                case 'Rest': return 'text-slate-500 bg-slate-100 dark:bg-slate-800/50 border-transparent';
+                case 'Recovery': return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 border-blue-200';
+                case 'Hard': return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 border-orange-200';
+                case 'Speed': return 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/10 border-purple-200';
+                case 'Tempo': return 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200';
+                case 'Intervals': return 'text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-500/10 border-pink-200';
+                case 'Long': return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200';
+                case 'Race': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-500/20 border-yellow-300 shadow-[0_0_10px_rgba(234,179,8,0.2)]';
                 default: return 'text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800';
             }
         };
 
-        // Reusable SVG Icons for dynamic content
-        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
-        const circleIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-300 dark:text-slate-600"><circle cx="12" cy="12" r="10"/></svg>`;
+        const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-emerald-500"><polyline points="20 6 9 17 4 12"/></svg>`;
+        const crossIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-rose-500"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+        const circleIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-300 dark:text-slate-600"><circle cx="12" cy="12" r="10"/></svg>`;
 
-        // --- Render UI ---
-        function updateUI() {
+        const parseNum = (str) => {
+            if (str === null || str === undefined || str === '') return null;
+            const cleaned = str.toString().replace(/[^\d:.]/g, '');
+            if (cleaned.includes(':')) {
+                const [min, sec] = cleaned.split(':').map(Number);
+                return min + (sec / 60);
+            }
+            return parseFloat(cleaned) || null;
+        };
+
+        const formatPaceLabel = (val) => {
+            if (!val) return '';
+            const mins = Math.floor(val);
+            const secs = Math.round((val - mins) * 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        };
+
+        // --- Charts ---
+        function updateCharts() {
+            const paceCtx = document.getElementById('paceChart').getContext('2d');
+            const weightCtx = document.getElementById('weightChart').getContext('2d');
+            
+            const paceDays = ['mon', 'fri', 'sun'];
+            const allDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+            
+            let paceLabels = [];
+            let paceData = [];
+            let weightLabels = [];
+            let weightData = [];
+
+            scheduleData.forEach(week => {
+                allDays.forEach(dayId => {
+                    const weightKey = `w${week.week}_${dayId}_weight`;
+                    const wVal = parseNum(progressData[weightKey]) || DEFAULT_WEIGHT;
+                    weightLabels.push(`W${week.week} ${dayId.charAt(0).toUpperCase()}`);
+                    weightData.push(wVal);
+
+                    if (paceDays.includes(dayId)) {
+                        const paceKey = `w${week.week}_${dayId}_pace`;
+                        const pVal = parseNum(progressData[paceKey]);
+                        paceLabels.push(`W${week.week} ${dayId.charAt(0).toUpperCase()}`);
+                        paceData.push(pVal);
+                    }
+                });
+            });
+
+            // Update Pace Chart
+            if (paceChart) {
+                paceChart.data.labels = paceLabels;
+                paceChart.data.datasets[0].data = paceData;
+                paceChart.update();
+            } else {
+                paceChart = new Chart(paceCtx, {
+                    type: 'line',
+                    data: { labels: paceLabels, datasets: [{ label: 'Pace', data: paceData, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', borderWidth: 2, tension: 0.3, fill: true, pointRadius: 2, spanGaps: true }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { reverse: true, ticks: { font: { size: 8 }, callback: (v) => formatPaceLabel(v) } }, x: { display: false } } }
+                });
+            }
+
+            // Update Weight Chart
+            if (weightChart) {
+                weightChart.data.labels = weightLabels;
+                weightChart.data.datasets[0].data = weightData;
+                weightChart.update();
+            } else {
+                weightChart = new Chart(weightCtx, {
+                    type: 'line',
+                    data: { labels: weightLabels, datasets: [{ label: 'Weight', data: weightData, borderColor: '#06b6d4', backgroundColor: 'rgba(6, 182, 212, 0.1)', borderWidth: 2, tension: 0.3, fill: true, pointRadius: 2, spanGaps: true }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { font: { size: 8 } } }, x: { display: false } } }
+                });
+            }
+        }
+
+        // --- Rendering ---
+        function renderSchedule() {
             const container = document.getElementById('schedule-container');
             let htmlString = '';
 
             scheduleData.forEach(weekData => {
                 const alcKey = `w${weekData.week}_alcohol`;
-                const isAlcChecked = progressData[alcKey] || false;
+                const alcStatus = progressData[alcKey] || 0;
 
                 let daysHtml = '';
                 weekData.days.forEach(day => {
                     const taskKey = `w${weekData.week}_${day.id}`;
-                    const isTaskChecked = progressData[taskKey] || false;
+                    const paceKey = `${taskKey}_pace`;
+                    const weightKey = `${taskKey}_weight`;
+                    
+                    const status = progressData[taskKey] || 0;
+                    const paceValue = progressData[paceKey] || '';
+                    const weightValue = progressData[weightKey] !== undefined ? progressData[weightKey] : DEFAULT_WEIGHT;
+                    
+                    const hasPaceInput = ['mon', 'fri', 'sun'].includes(day.id);
                     const isRest = day.type === 'Rest';
 
-                    const btnClass = isTaskChecked
-                        ? 'bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/30'
-                        : 'bg-white dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800';
-                        
-                    const iconTransform = isTaskChecked ? 'scale-110' : 'scale-100 group-hover:scale-110';
-                    const iconSvg = isTaskChecked ? checkIcon : circleIcon;
-                    const textClass = isTaskChecked ? 'text-slate-400 line-through' : (isRest ? 'text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-200');
-                    
-                    // Condense day name on mobile (e.g. Monday -> Mon)
-                    const dayNameShort = day.name.substring(0, 3);
-                    const dayNameRest = day.name.substring(3);
+                    let btnClass = (status === 1) ? 'bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/30' : 
+                                   (status === 2) ? 'bg-rose-50 dark:bg-rose-500/5 border-rose-200 dark:border-rose-500/30' : 
+                                   'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800';
 
                     daysHtml += `
-                        <button data-task="${taskKey}" class="text-left group relative flex flex-col p-3 sm:p-4 rounded-xl border transition-all duration-200 ${btnClass}">
-                            <div class="flex justify-between items-start w-full mb-2 sm:mb-3">
-                                <span class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">${dayNameShort}<span class="hidden sm:inline">${dayNameRest}</span></span>
-                                <div class="transition-transform duration-200 ${iconTransform}">
-                                    ${iconSvg}
-                                </div>
+                        <div class="relative flex flex-col p-3 rounded-xl border transition-all duration-200 ${btnClass}">
+                            <button data-task="${taskKey}" class="absolute inset-0 z-10" title="Cycle Status"></button>
+                            
+                            <div class="relative z-20 pointer-events-none flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">${day.name}</span>
+                                <div>${status === 1 ? checkIcon : (status === 2 ? crossIcon : circleIcon)}</div>
                             </div>
-                            <div class="mt-auto inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-1.5 sm:mb-2 w-max border ${getTypeColor(day.type)}">
+
+                            <div class="relative z-20 pointer-events-none mt-auto inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-bold uppercase mb-1.5 w-max border ${getTypeColor(day.type)}">
                                 ${day.type}
                             </div>
-                            <span class="text-xs sm:text-sm font-semibold leading-tight ${textClass}">
+
+                            <span class="relative z-20 pointer-events-none text-xs font-bold leading-tight mb-3 ${status === 1 ? 'text-slate-400 line-through' : (status === 2 ? 'text-rose-300 dark:text-rose-900/40' : 'dark:text-white')}">
                                 ${day.task}
                             </span>
-                        </button>
+
+                            <div class="relative z-30 space-y-1.5 mt-auto">
+                                ${hasPaceInput ? `
+                                <div class="relative">
+                                    <input type="text" placeholder="Pace" value="${paceValue}" data-key="${paceKey}" oninput="handleInput(this)" onclick="event.stopPropagation()" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-md pl-2 pr-6 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-emerald-500" />
+                                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] text-slate-400 font-bold">/km</span>
+                                </div>` : ''}
+                                <div class="relative">
+                                    <input type="text" placeholder="Weight" value="${weightValue}" data-key="${weightKey}" oninput="handleWeightInput(this)" onclick="event.stopPropagation()" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-md pl-2 pr-6 py-1 text-[10px] font-bold dark:text-white outline-none focus:ring-1 focus:ring-cyan-500" />
+                                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] text-slate-400 font-bold">/kg</span>
+                                </div>
+                            </div>
+                        </div>
                     `;
                 });
 
-                const alcBtnClass = isAlcChecked 
-                    ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400' 
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-900';
-
                 htmlString += `
-                    <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-slate-300 dark:hover:border-slate-700 transition-colors shadow-sm dark:shadow-none">
-                        <div class="bg-slate-50 dark:bg-slate-800/40 px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-slate-800/80 gap-3 sm:gap-4 transition-colors">
+                    <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+                        <div class="bg-slate-50 dark:bg-slate-800/40 px-4 py-3 flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80">
                             <div class="flex items-center space-x-3">
-                                <div class="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold w-10 h-10 rounded-xl flex items-center justify-center">
-                                    W${weekData.week}
-                                </div>
-                                <div>
-                                    <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Week ${weekData.week}</h2>
-                                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Starting ${weekData.date}</p>
-                                </div>
+                                <div class="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold w-8 h-8 rounded-lg flex items-center justify-center text-xs">W${weekData.week}</div>
+                                <h2 class="text-sm font-bold dark:text-white">Week ${weekData.week} - ${weekData.date}</h2>
                             </div>
-                            <button data-task="${alcKey}" class="flex items-center justify-between sm:justify-start space-x-3 px-4 py-2 rounded-xl border transition-all w-full sm:w-auto ${alcBtnClass}">
-                                <div class="flex flex-col text-left">
-                                    <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">No Alcohol 🚫🍺</span>
-                                </div>
-                                ${isAlcChecked ? checkIcon : circleIcon}
+                            <button data-task="${alcKey}" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all ${progressData[alcKey] === 1 ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'bg-white dark:bg-slate-900 border-slate-200'}">
+                                <span>Dry Discipline</span>
+                                ${progressData[alcKey] === 1 ? checkIcon : (progressData[alcKey] === 2 ? crossIcon : circleIcon)}
                             </button>
                         </div>
-                        <div class="p-3 sm:p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 sm:gap-3">
+                        <div class="p-3 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5">
                             ${daysHtml}
                         </div>
                     </div>
@@ -338,48 +316,75 @@
             });
 
             container.innerHTML = htmlString;
+            updateStats();
+            updateCharts();
+        }
 
-            // Update Stats
+        function updateStats() {
             const totalTasks = scheduleData.length * 8;
-            const completedTasks = Object.values(progressData).filter(Boolean).length;
+            const completedTasks = Object.keys(progressData).filter(k => !k.endsWith('_pace') && !k.endsWith('_weight') && progressData[k] === 1).length;
             const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
             document.getElementById('progress-tasks').textContent = completedTasks;
             document.getElementById('progress-percentage').textContent = completionPercentage;
             document.getElementById('progress-bar-fill').style.width = `${completionPercentage}%`;
+        }
+
+        // Forward propagation logic for weight
+        function handleWeightInput(el) {
+            const key = el.getAttribute('data-key');
+            const newValue = el.value;
+            
+            // Find current key position in chronological order
+            const startIndex = allWeightKeys.indexOf(key);
+            
+            if (startIndex !== -1) {
+                // Update from this day onwards
+                for (let i = startIndex; i < allWeightKeys.length; i++) {
+                    progressData[allWeightKeys[i]] = newValue;
+                }
+            }
+
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
+            
+            // Partial re-render (we need to update other inputs in the DOM)
+            // To keep it simple and reactive, we re-render the whole container
+            renderSchedule();
+        }
+
+        function handleInput(el) {
+            const key = el.getAttribute('data-key');
+            progressData[key] = el.value;
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
+            updateCharts();
         }
 
         // --- Interaction ---
         document.getElementById('schedule-container').addEventListener('click', (e) => {
             const btn = e.target.closest('button[data-task]');
             if (!btn) return;
-            
             const key = btn.getAttribute('data-task');
-            
-            // Toggle Update & Save to LocalStorage
-            progressData[key] = !progressData[key];
+            progressData[key] = ((progressData[key] || 0) + 1) % 3;
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
-            
-            updateUI();
+            renderSchedule();
         });
 
-        // --- Initialization Sequence ---
         function initApp() {
-            updateUI(); // Render state from localStorage initially
-
-            // Setup Theme Toggle
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            if (themeToggleBtn) {
-                themeToggleBtn.addEventListener('click', () => {
-                    document.documentElement.classList.toggle('dark');
-                    const isDark = document.documentElement.classList.contains('dark');
-                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            // If w1_mon_weight is missing, set initial default
+            if (progressData['w1_mon_weight'] === undefined) {
+                allWeightKeys.forEach(key => {
+                    progressData[key] = DEFAULT_WEIGHT;
                 });
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(progressData));
             }
+
+            renderSchedule(); 
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            });
         }
 
-        // Start
-        initApp();
+        window.onload = initApp;
     </script>
 </body>
 </html>
