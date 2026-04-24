@@ -24,13 +24,23 @@
             signInWithPopup
         } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-        // Environment Config
-        let firebaseConfig;
-        try {
-            firebaseConfig = JSON.parse(__firebase_config);
-        } catch (e) {
-            console.error("Config missing");
-            document.body.innerHTML = `<div class="flex items-center justify-center h-screen bg-slate-900 text-white p-10 text-center"><div><h1 class="text-2xl font-bold mb-2">Configuration Error</h1><p class="text-slate-400">Firebase configuration is missing or invalid.</p></div></div>`;
+        // Configuration Fallback logic
+        let firebaseConfig = {
+            apiKey: "AIzaSyADK2YRcaR-uk5zrwri-qWR7DAWsaQ35KY",
+            authDomain: "runforge-cede3.firebaseapp.com",
+            projectId: "runforge-cede3",
+            storageBucket: "runforge-cede3.firebasestorage.app",
+            messagingSenderId: "424668696488",
+            appId: "1:424668696488:web:1d0f3d2ed844871159979d",
+            measurementId: "G-G2LH33W255",
+            databaseURL: "https://runforge-cede3-default-rtdb.europe-west1.firebasedatabase.app"
+        };
+
+        // If the environment provides a config, use that instead (more secure)
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+            try {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } catch (e) { console.error("Could not parse environment config"); }
         }
         
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'runforge-app';
@@ -44,7 +54,6 @@
         const DEFAULT_WEIGHT = 83.1;
         let currentUser = null;
 
-        // Schedule Data
         const scheduleData = [
             { week: 1, date: "Apr 13", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "3k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "4k Long Run" }] },
             { week: 2, date: "Apr 20", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "4k Speed" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "5k Long Run" }] },
@@ -58,13 +67,11 @@
         const allWeightKeys = [];
         scheduleData.forEach(w => w.days.forEach(d => allWeightKeys.push(`w${w.week}_${d.id}_weight`)));
 
-        // --- Auth Implementation ---
         const initAuth = async () => {
-            // Show manual login button if it takes too long
             setTimeout(() => {
                 const btn = document.getElementById('manual-login-btn');
                 if (btn && !currentUser) btn.classList.remove('hidden');
-            }, 5000);
+            }, 4000);
 
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -76,7 +83,7 @@
                 console.error("Auth failed:", err);
                 const errorEl = document.getElementById('login-error');
                 if (errorEl) {
-                    errorEl.textContent = `Auth Error: ${err.code || err.message}`;
+                    errorEl.textContent = `Auth Error: ${err.message}`;
                     errorEl.classList.remove('hidden');
                 }
             }
@@ -84,27 +91,20 @@
 
         window.manualLogin = async () => {
             const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (e) {
-                console.error("Popup failed", e);
-            }
+            try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); }
         };
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
-            const authScreen = document.getElementById('auth-screen');
-            const appContent = document.getElementById('app-content');
-            
             if (user) {
-                authScreen.classList.add('hidden');
-                appContent.classList.remove('hidden');
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
                 document.getElementById('user-avatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.uid}&background=random`;
                 document.getElementById('user-name').textContent = user.displayName ? user.displayName.split(' ')[0] : 'Athlete';
                 startSync(user.uid);
             } else {
-                authScreen.classList.remove('hidden');
-                appContent.classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('app-content').classList.add('hidden');
             }
         });
 
@@ -124,9 +124,7 @@
                 updateCharts();
                 updateStats();
             }, (error) => {
-                console.error("Database Error:", error);
-                document.getElementById('schedule-container').innerHTML = `<div class="p-8 bg-rose-50 dark:bg-rose-900/10 border border-rose-200 rounded-3xl text-center"><i data-lucide="alert-triangle" class="mx-auto mb-2 text-rose-500"></i><p class="text-sm font-bold text-rose-800">Database Access Denied</p><p class="text-[10px] text-rose-600/70 mt-1">${error.message}</p></div>`;
-                lucide.createIcons();
+                console.error("Sync Error:", error);
             });
 
             window.handleInput = (el) => setDoc(userDocRef, { [el.dataset.key]: el.value }, { merge: true });
@@ -148,7 +146,6 @@
             };
         }
 
-        // --- UI Rendering ---
         function renderSchedule() {
             const container = document.getElementById('schedule-container');
             container.innerHTML = scheduleData.map(w => {
@@ -202,9 +199,9 @@
         };
 
         function updateCharts() {
-            const paceCtx = document.getElementById('paceChart')?.getContext('2d');
-            const weightCtx = document.getElementById('weightChart')?.getContext('2d');
-            if (!paceCtx || !weightCtx) return;
+            const pCtx = document.getElementById('paceChart')?.getContext('2d');
+            const wCtx = document.getElementById('weightChart')?.getContext('2d');
+            if (!pCtx || !wCtx) return;
 
             let pL = [], pD = [], wL = [], wD = [];
             scheduleData.forEach(w => w.days.forEach(d => {
@@ -218,10 +215,10 @@
             }));
 
             if (paceChart) { paceChart.data.labels = pL; paceChart.data.datasets[0].data = pD; paceChart.update(); }
-            else { paceChart = new Chart(paceCtx, { type: 'line', data: { labels: pL, datasets: [{ data: pD, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.3, fill: true, spanGaps: true, pointRadius: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { reverse: true, ticks: { font: { size: 9 }, callback: v => { const m = Math.floor(v), s = Math.round((v-m)*60); return `${m}:${s.toString().padStart(2,'0')}`; } } }, x: { display: false } } } }); }
+            else { paceChart = new Chart(pCtx, { type: 'line', data: { labels: pL, datasets: [{ data: pD, borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', tension: 0.3, fill: true, spanGaps: true, pointRadius: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { reverse: true, ticks: { font: { size: 9 }, callback: v => { const m = Math.floor(v), s = Math.round((v-m)*60); return `${m}:${s.toString().padStart(2,'0')}`; } } }, x: { display: false } } } }); }
 
             if (weightChart) { weightChart.data.labels = wL; weightChart.data.datasets[0].data = wD; weightChart.update(); }
-            else { weightChart = new Chart(weightCtx, { type: 'line', data: { labels: wL, datasets: [{ data: wD, borderColor: '#06b6d4', backgroundColor: 'rgba(6, 182, 212, 0.1)', tension: 0.3, fill: true, spanGaps: true, pointRadius: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { font: { size: 9 } } }, x: { display: false } } } }); }
+            else { weightChart = new Chart(wCtx, { type: 'line', data: { labels: wL, datasets: [{ data: wD, borderColor: '#06b6d4', backgroundColor: 'rgba(6, 182, 212, 0.1)', tension: 0.3, fill: true, spanGaps: true, pointRadius: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { font: { size: 9 } } }, x: { display: false } } } }); }
         }
 
         function updateStats() {
@@ -259,7 +256,7 @@
             <div id="login-error" class="hidden p-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 rounded-xl text-xs text-rose-600"></div>
             <div class="flex flex-col items-center justify-center space-y-4">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
-                <button id="manual-login-btn" onclick="manualLogin()" class="hidden px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold transition-all">Sign in Manually</button>
+                <button id="manual-login-btn" onclick="manualLogin()" class="hidden px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold transition-all">Retry Manual Sign-in</button>
             </div>
             <p class="text-[10px] text-slate-400">Authenticating session...</p>
         </div>
