@@ -20,16 +20,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        import { 
-            getAuth, 
-            signInWithRedirect, 
-            getRedirectResult,
-            GoogleAuthProvider, 
-            onAuthStateChanged, 
-            signOut, 
-            setPersistence, 
-            browserLocalPersistence 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyADK2YRcaR-uk5zrwri-qWR7DAWsaQ35KY",
@@ -47,6 +38,7 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
         
+        // Configuration for better popup behavior
         provider.setCustomParameters({ prompt: 'select_account' });
 
         let progressData = {};
@@ -55,28 +47,22 @@
         let weightChart = null;
         const DEFAULT_WEIGHT = 83.1;
 
-        // --- Auth Logic ---
+        // --- Auth & Sync ---
         window.login = async () => {
             const errorEl = document.getElementById('login-error');
-            const loginBtn = document.getElementById('login-btn');
-            if (errorEl) errorEl.classList.add('hidden');
-            if (loginBtn) {
-                loginBtn.disabled = true;
-                loginBtn.innerHTML = `<span class="animate-spin mr-2">◌</span> Redirecting...`;
-            }
+            errorEl.classList.add('hidden');
             
             try {
+                // Ensure persistence is set so you stay logged in
                 await setPersistence(auth, browserLocalPersistence);
-                await signInWithRedirect(auth, provider);
+                await signInWithPopup(auth, provider);
             } catch (err) {
                 console.error("Auth Error:", err);
-                if (errorEl) {
-                    errorEl.textContent = `Error: ${err.code.replace('auth/', '')}`;
-                    errorEl.classList.remove('hidden');
-                }
-                if (loginBtn) {
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = `<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"><span>Sign in with Google</span>`;
+                errorEl.textContent = `Error: ${err.code.replace('auth/', '')}`;
+                errorEl.classList.remove('hidden');
+                
+                if (err.code === 'auth/unauthorized-domain') {
+                    errorEl.innerHTML = `<strong>Domain Blocked:</strong> Go to Firebase Console > Auth > Settings > Authorized Domains and add: <br><code class="bg-slate-100 dark:bg-slate-800 p-1 rounded text-[10px] mt-2 block">${window.location.hostname}</code>`;
                 }
             }
         };
@@ -84,10 +70,6 @@
         window.logout = () => {
             signOut(auth).then(() => window.location.reload());
         };
-
-        getRedirectResult(auth).catch((error) => {
-            console.error("Redirect Error:", error);
-        });
 
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById('auth-screen');
@@ -105,47 +87,12 @@
             }
         });
 
-        const scheduleData = [
-            { week: 1, date: "Apr 13", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "3k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "4k Long Run" }] },
-            { week: 2, date: "Apr 20", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "2k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "3k Easy" }, { id: "fri", name: "Friday", type: "Speed", task: "4k Speed" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "5k Long Run" }] },
-            { week: 3, date: "Apr 27", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" }, { id: "fri", name: "Friday", type: "Tempo", task: "4k Tempo" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "6k Long Run" }] },
-            { week: 4, date: "May 4", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "4k Easy" }, { id: "fri", name: "Friday", type: "Intervals", task: "5k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "7k Long Run" }] },
-            { week: 5, date: "May 11", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" }, { id: "fri", name: "Friday", type: "Tempo", task: "5k Tempo" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "8k Long Run" }] },
-            { week: 6, date: "May 18", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Hard", task: "60m Soccer HIIT" }, { id: "thu", name: "Thursday", type: "Recovery", task: "5k Easy" }, { id: "fri", name: "Friday", type: "Intervals", task: "4k Intervals" }, { id: "sat", name: "Saturday", type: "Rest", task: "Rest" }, { id: "sun", name: "Sunday", type: "Long", task: "9k Long Run" }] },
-            { week: 7, date: "May 25", days: [{ id: "mon", name: "Monday", type: "Recovery", task: "3k Easy" }, { id: "tue", name: "Tuesday", type: "Rest", task: "Rest" }, { id: "wed", name: "Wednesday", type: "Recovery", task: "Taper Down" }, { id: "thu", name: "Thursday", type: "Recovery", task: "2k Very Easy" }, { id: "fri", name: "Friday", type: "Rest", task: "Rest" }, { id: "sat", name: "Saturday", type: "Rest", task: "Walk" }, { id: "sun", name: "Sunday", type: "Race", task: "10k RACE DAY!" }] }
-        ];
-
-        const allWeightKeys = [];
-        scheduleData.forEach(w => {
-            ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].forEach(d => {
-                allWeightKeys.push(`w${w.week}_${d}_weight`);
-            });
-        });
-
         function startSync(uid) {
             currentDataRef = ref(db, `users/${uid}/training_stats`);
-            
-            // Helpful timeout for rules debugging
-            const syncTimeout = setTimeout(() => {
-                const container = document.getElementById('schedule-container');
-                if (container && container.innerHTML.includes('Syncing')) {
-                    container.innerHTML = `
-                        <div class="p-8 bg-amber-50 dark:bg-amber-900/10 border-2 border-dashed border-amber-200 dark:border-amber-900/30 rounded-3xl text-center">
-                            <i data-lucide="help-circle" class="w-10 h-10 text-amber-500 mx-auto mb-4"></i>
-                            <h3 class="font-bold text-amber-800 dark:text-amber-400">Database is taking a while...</h3>
-                            <p class="text-xs text-amber-600/70 mt-2 mb-4">This usually happens if your Rules aren't set to allow "users/${uid}".</p>
-                            <button onclick="window.location.reload()" class="bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold">Retry Sync</button>
-                        </div>
-                    `;
-                    lucide.createIcons();
-                }
-            }, 5000);
-
             onValue(currentDataRef, (snapshot) => {
-                clearTimeout(syncTimeout);
                 const data = snapshot.val();
                 if (!data) {
-                    const initial = { initialized: true };
+                    const initial = {};
                     allWeightKeys.forEach(k => initial[k] = DEFAULT_WEIGHT);
                     set(currentDataRef, initial);
                     return;
@@ -155,19 +102,15 @@
                 updateCharts();
                 updateStats();
             }, (error) => {
-                clearTimeout(syncTimeout);
                 console.error("Database Access Error:", error);
-                const container = document.getElementById('schedule-container');
-                if(container) {
-                    container.innerHTML = `
-                        <div class="p-8 bg-rose-50 dark:bg-rose-900/10 border-2 border-dashed border-rose-200 dark:border-rose-900/30 rounded-3xl text-center">
-                            <i data-lucide="lock" class="w-10 h-10 text-rose-500 mx-auto mb-4"></i>
-                            <h3 class="font-bold text-rose-800 dark:text-rose-400">Database Locked</h3>
-                            <p class="text-xs text-rose-600/70 mt-2">Check your Firebase Rules for path: users/${uid}</p>
-                        </div>
-                    `;
-                    lucide.createIcons();
-                }
+                document.getElementById('schedule-container').innerHTML = `
+                    <div class="p-8 bg-rose-50 dark:bg-rose-900/10 border-2 border-dashed border-rose-200 dark:border-rose-900/30 rounded-3xl text-center">
+                        <i data-lucide="lock" class="w-10 h-10 text-rose-500 mx-auto mb-4"></i>
+                        <h3 class="font-bold text-rose-800 dark:text-rose-400">Database Locked</h3>
+                        <p class="text-xs text-rose-600/70 mt-2">Update your Database Rules to allow access to users/${uid}</p>
+                    </div>
+                `;
+                lucide.createIcons();
             });
         }
 
@@ -287,12 +230,9 @@
             const totalTasks = (scheduleData.length * 7) + scheduleData.length;
             const done = Object.keys(progressData).filter(k => !k.includes('_pace') && !k.includes('_weight') && progressData[k] === 1).length;
             const percentage = Math.round((done / totalTasks) * 100);
-            const pTasks = document.getElementById('progress-tasks');
-            const pPerc = document.getElementById('progress-percentage');
-            const pBar = document.getElementById('progress-bar-fill');
-            if(pTasks) pTasks.textContent = done;
-            if(pPerc) pPerc.textContent = percentage;
-            if(pBar) pBar.style.width = `${percentage}%`;
+            document.getElementById('progress-tasks').textContent = done;
+            document.getElementById('progress-percentage').textContent = percentage;
+            document.getElementById('progress-bar-fill').style.width = `${percentage}%`;
         }
 
         window.toggleTheme = () => {
@@ -322,13 +262,13 @@
                 Authentication Error
             </div>
 
-            <button id="login-btn" onclick="login()" class="w-full flex items-center justify-center space-x-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 py-3.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-bold text-slate-700 dark:text-slate-200 group shadow-sm disabled:opacity-50">
+            <button onclick="login()" class="w-full flex items-center justify-center space-x-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 py-3.5 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-bold text-slate-700 dark:text-slate-200 group shadow-sm">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 group-hover:scale-110 transition-transform">
                 <span>Sign in with Google</span>
             </button>
             
             <p class="text-[10px] text-slate-400 px-4 leading-normal">
-                Redirecting secure login. Stay in the flow.
+                If the popup closes instantly, ensure this domain is added to your Firebase Authorized Domains list.
             </p>
         </div>
     </div>
